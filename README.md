@@ -1,2 +1,4 @@
-# SwitchListener
-Make your computer understanding the differents Nintendo Switch Controllers
+# Switch Listener
+
+
+Work in progress !

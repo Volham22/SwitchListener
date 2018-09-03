@@ -1,0 +1,6 @@
+# Visual Studio code files :
+.vscode/
+
+# Binary :
+ListHIDDevice
+SwitchListener
