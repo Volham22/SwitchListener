@@ -22,7 +22,7 @@ static HIDBuffer initBuffer()
 }
 
 HidIO::HidIO(hid_device* device)
-: m_Device(nullptr), m_isConnected(true)
+: m_Device(nullptr), m_isConnected(true), m_ExchangeCount(0)
 {
     if(device)
         m_Device = device;
@@ -92,4 +92,50 @@ HIDBuffer HidIO::ExchangeOnDevice(const HIDBuffer &data)
     {
         return { 0, 0 }; // Same here
     }
+}
+
+HIDBuffer HidIO::SendCommandToDevice(ControllerCommand &command)
+{
+    HIDBuffer buffer = initBuffer();
+
+    buffer.Buffer[0x0] = command.CommandID; // Command ID is set at 0x0 only on BT !
+
+    if(command.Data != 0 && command.DataSize != 0) // Copy command data to the buffer
+        memcpy(buffer.Buffer + 0x1, command.Data, command.DataSize);
+
+    buffer.BufferSize += 0x1;
+
+    HIDBuffer result = ExchangeOnDevice(buffer);
+
+    if(result.Buffer)
+    {
+        memcpy(result.Buffer, buffer.Buffer, INPUT_BUFFER_SIZE);
+        return buffer;
+    }
+    else
+    {
+        return { 0, 0 };
+    }
+}
+
+HIDBuffer HidIO::SendSubCommandToDevice(ControllerCommand &command, int subCommand)
+{
+    HIDBuffer buffer  = initBuffer();
+
+    // Set Rumble Data
+    uint8_t rumble_base[9] = {(++m_ExchangeCount) & 0xF, 0x00, 0x01, 0x40, 0x40, 0x00, 0x01, 0x40, 0x40 };
+    memcpy(buffer.Buffer, rumble_base, 9);
+
+    buffer.Buffer[9] = subCommand;
+
+    if(command.Data != 0 && command.DataSize != 0)
+        memcpy(buffer.Buffer + 10, command.Data, command.DataSize + 10);
+
+    command.DataSize += 10;
+    HIDBuffer result = SendCommandToDevice(command);
+
+    if(result.Buffer)
+        return result;
+    else
+        return { 0, 0 };
 }
