@@ -11,6 +11,10 @@ SwitchListener :
 	@echo "Building SwitchListener"
 	@$(COMPILER) -o $(EXECUTABLE_NAME) $(PROJECT_SOURCE_DIR)/*.cpp $(LINKER_FLAG)
 
+SwitchListener-Debug :
+	@echo "Building SwitchListener"
+	@$(COMPILER) -o $(EXECUTABLE_NAME) $(PROJECT_SOURCE_DIR)/*.cpp $(LINKER_FLAG) -g
+
 Tools :
 	@echo "Building Tools"
 	@gcc -o ListHIDDevice $(CURRENT_DIR)/tools/ListHIDDevice.c $(LINKER_FLAG)

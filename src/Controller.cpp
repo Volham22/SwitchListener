@@ -22,7 +22,7 @@ bool Controller::DoHandshake()
         return false;
 
     ControllerCommand command;
-    memset(command.Data, 0, 1); // 1 is sizeof(uint8_t)
+    memset(command.Data, 0, INPUT_BUFFER_SIZE); // 1 is sizeof(uint8_t)
 
     // Enable Vibration (SubcommandID 0x48)
     command.Data[0] = 0x01; // Set to true

@@ -15,7 +15,7 @@ struct HIDBuffer
 
 struct ControllerCommand
 {
-    uint8_t* Data;
+    uchar Data[INPUT_BUFFER_SIZE];
     int CommandID;
     int DataSize;
 };
