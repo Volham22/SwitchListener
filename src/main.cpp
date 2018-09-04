@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "HidScanner.h"
+#include "Controller.h"
 
 int main()
 {
@@ -18,6 +19,18 @@ int main()
         std::cout << "A Pro Controller has been found !" << std::endl;
     else
         std::cout << "Nohing found." << std::endl;
+
+    hid_device* controllerHandler = scanner.GetHidDevice();
+
+    if(controllerHandler)
+    {
+        Controller controller(controllerHandler);
+
+        if(controller.DoHandshake())
+            std::cout << "Sucessfully Init" << std::endl;
+        else
+            std::cout << "Error in HandShake !" << std::endl;
+    }
 
     return 0;
 }
