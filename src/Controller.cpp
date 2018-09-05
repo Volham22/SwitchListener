@@ -83,6 +83,7 @@ bool Controller::DoHandshake()
         command.BufferSize = 2;
 
         m_Com.SendSubCommandToDevice(command, 0x1, 0x30);
+        printf("Enabled some leds.");
     }
     else
     {
