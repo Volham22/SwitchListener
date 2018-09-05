@@ -4,3 +4,6 @@
 # Binary :
 ListHIDDevice
 SwitchListener
+
+# Other
+output.txt

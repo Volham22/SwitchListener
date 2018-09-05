@@ -2,16 +2,17 @@
 
 #include <stdio.h>
 #include <cstring>
+#include <unistd.h>
 
 static void PrintData(const HIDBuffer &data)
 {
     for(int i = 0; i<data.BufferSize; i++)
-        printf("%02x", data.Buffer[i]);
+        printf("%02x ", data.Buffer[i]);
 
     printf("\n");
 }
 
-static HIDBuffer initBuffer()
+HIDBuffer initBuffer()
 {
     HIDBuffer buffer;
 
@@ -29,7 +30,7 @@ HidIO::HidIO(hid_device* device)
     else
         m_isConnected = false;
 
-    hid_set_nonblocking(m_Device, 1);
+    //hid_set_nonblocking(m_Device, 1);
 }
 
 HIDBuffer HidIO::SetDisconnected()
@@ -67,75 +68,62 @@ HIDBuffer HidIO::ReadOnDevice()
     }
 }
 
-HIDBuffer HidIO::ExchangeOnDevice(const HIDBuffer &data)
+void HidIO::ExchangeOnDevice(HIDBuffer buffer)
 {
-    if(m_isConnected)
+    printf("Send:\n");
+    PrintData(buffer);
+    
+    hid_write(m_Device, buffer.Buffer, buffer.BufferSize);
+
+    int res = hid_read(m_Device, buffer.Buffer, INPUT_BUFFER_SIZE);
+    if(res > 0)
     {
-        int res = hid_write(m_Device, data.Buffer, data.BufferSize);
-
-        if(res < 0)
-            return SetDisconnected();
-
-        if(m_isConnected)
-        {
-            HIDBuffer buffer = initBuffer();
-
-            int result = hid_read(m_Device, buffer.Buffer, buffer.BufferSize);
-
-            if(!result > 0)
-                return SetDisconnected();
-            else
-                return buffer;
-        }
+        printf("Receive:\n");
+        PrintData(buffer);
     }
     else
     {
-        return { 0, 0 }; // Same here
+        printf("The controller returned nothing.");
     }
 }
 
-HIDBuffer HidIO::SendCommandToDevice(ControllerCommand &command)
+void HidIO::SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID)
 {
-    HIDBuffer buffer = initBuffer();
+    unsigned char buf[0x400];
+    memset(buf, 0, 0x400);
 
-    buffer.Buffer[0x0] = command.CommandID; // Command ID is set at 0x0 only on BT !
+    buf[0x0] = commandID;
+    if(commandBuffer.Buffer != NULL && commandBuffer.BufferSize != 0)
+        memcpy(buf + (0x1), commandBuffer.Buffer, commandBuffer.BufferSize);
+    
+    HIDBuffer buffer;
+    buffer.BufferSize = commandBuffer.BufferSize;
+    memcpy(buffer.Buffer, buf, INPUT_BUFFER_SIZE);
 
-    if(command.Data != 0 && command.DataSize != 0) // Copy command data to the buffer
-        memcpy(buffer.Buffer + 0x1, command.Data, command.DataSize);
-
-    buffer.BufferSize += 0x1;
-
-    HIDBuffer result = ExchangeOnDevice(buffer);
-
-    if(result.Buffer)
-    {
-        memcpy(result.Buffer, buffer.Buffer, INPUT_BUFFER_SIZE);
-        return buffer;
-    }
-    else
-    {
-        return { 0, 0 };
-    }
+    ExchangeOnDevice(buffer);
+    
+    if(commandBuffer.Buffer)
+        memcpy(commandBuffer.Buffer, buf, 0x40);
 }
 
-HIDBuffer HidIO::SendSubCommandToDevice(ControllerCommand &command, int subCommand)
+void HidIO::SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID)
 {
-    HIDBuffer buffer  = initBuffer();
+    unsigned char buf[0x400];
+    memset(buf, 0, 0x400);
+    
+    uint8_t rumble_base[9] = {((uint8_t)++m_ExchangeCount) & 0xF, 0x00, 0x01, 0x40, 0x40, 0x00, 0x01, 0x40, 0x40};
+    memcpy(buf, rumble_base, 9);
+    
+    buf[9] = subCommandID;
+    if(commandBuffer.Buffer && commandBuffer.BufferSize != 0)
+        memcpy(buf + 10, commandBuffer.Buffer, commandBuffer.BufferSize);
 
-    // Set Rumble Data
-    uint8_t rumble_base[9] = {(++m_ExchangeCount) & 0xF, 0x00, 0x01, 0x40, 0x40, 0x00, 0x01, 0x40, 0x40 };
-    memcpy(buffer.Buffer, rumble_base, 9);
-
-    buffer.Buffer[9] = subCommand;
-
-    if(command.Data != 0 && command.DataSize != 0)
-        memcpy(buffer.Buffer + 10, command.Data, command.DataSize + 10);
-
-    command.DataSize += 10;
-    HIDBuffer result = SendCommandToDevice(command);
-
-    if(result.Buffer)
-        return result;
-    else
-        return { 0, 0 };
+    HIDBuffer send;
+    send.BufferSize = commandBuffer.BufferSize + 10;
+    memcpy(send.Buffer, buf, INPUT_BUFFER_SIZE);
+        
+    SendCommandToDevice(send, commandID);
+        
+    if(commandBuffer.Buffer)
+        memcpy(commandBuffer.Buffer, buf, 0x40);
 }

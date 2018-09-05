@@ -4,7 +4,7 @@
 #include <hidapi/hidapi.h>
 #include <cstdint>
 
-#define INPUT_BUFFER_SIZE 0x400
+#define INPUT_BUFFER_SIZE (0x400)
 typedef unsigned char uchar;
 
 struct HIDBuffer
@@ -13,22 +13,17 @@ struct HIDBuffer
     uchar Buffer[INPUT_BUFFER_SIZE];
 };
 
-struct ControllerCommand
-{
-    uchar Data[INPUT_BUFFER_SIZE];
-    int CommandID;
-    int DataSize;
-};
+HIDBuffer initBuffer();
 
 class HidIO
 {
 public:
     HidIO(hid_device* device);
     void WriteOnDevice(const HIDBuffer &data);
-    HIDBuffer SendCommandToDevice(ControllerCommand &command);
-    HIDBuffer SendSubCommandToDevice(ControllerCommand &command, int subCommand);
+    void SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID);
+    void SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID);
     HIDBuffer ReadOnDevice();
-    HIDBuffer ExchangeOnDevice(const HIDBuffer &data);
+    void ExchangeOnDevice(HIDBuffer buffer);
     inline bool IsConnected() const { return m_isConnected; }
     inline hid_device* GetDevice() const { return m_Device; }
 private:
