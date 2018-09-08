@@ -78,12 +78,12 @@ bool Controller::DoHandshake()
     {
         command = initBuffer(); // Reset buffer
 
-        command.Buffer[0] = 0x80 | 0x40 | 0x2 | 0x1;
-        command.Buffer[1] = 0x80 | 0x40 | 0x2 | 0x1;
+        command.Buffer[0] = 0x01 | 0x00 | 0x00 | 0x00; // Enable
+        command.Buffer[1] = 0x00 | 0x00 | 0x00 | 0x00;
         command.BufferSize = 2;
 
         m_Com.SendSubCommandToDevice(command, 0x1, 0x30);
-        printf("Enabled some leds.");
+        printf("Enabled some leds.\n");
     }
     else
     {
