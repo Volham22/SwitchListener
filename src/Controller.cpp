@@ -94,7 +94,99 @@ bool Controller::DoHandshake()
     printf("=======End of Handshake=======\n");
 
     if(!m_Com.IsConnected())
+    {
+        m_IsInitialized = false;
         return false;
+    }
     else
+    {
+        m_IsInitialized = true;
         return true;
+    }
+}
+
+bool Controller::SetVibration(bool active)
+{
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 1;
+
+        if(active)
+        {
+            buffer.Buffer[0] = 0x1;
+            m_Com.SendSubCommandToDevice(buffer, 0x1, 0x48);
+
+            printf("Enabled vibrations\n");
+            return true;
+        }
+        else
+        {
+            buffer.Buffer[0] = 0x0;
+            m_Com.SendSubCommandToDevice(buffer, 0x1, 0x48);
+
+            printf("Disabled vibrations\n");
+            return true;
+        }
+    }
+    else
+    {
+        printf("Communication with Controller failed.\n Is the Controller connected?\n");
+        return false;
+    }
+}
+
+bool Controller::EnableIMU(bool active)
+{
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 1;
+
+        if(active)
+        {
+            buffer.Buffer[0] = 0x1;
+            m_Com.SendSubCommandToDevice(buffer, 0x1, 0x40);
+
+            printf("Enabled IMU\n");
+            return true;
+        }
+        else
+        {
+            buffer.Buffer[0] = 0x0;
+            m_Com.SendSubCommandToDevice(buffer, 0x1, 0x40);
+
+            printf("Disabled IMU\n");
+            return true;   
+        }
+    }
+    else
+    {
+        printf("Communication with Controller failed.\n Is the Controller connected?\n");
+        return false;
+    }
+}
+
+bool Controller::Disconnect()
+{
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 1;
+        buffer.Buffer[0] = 0x0;
+
+        m_Com.SendSubCommandToDevice(buffer, 0x1, 0x06);
+
+        printf("Device Disconnected\n");
+    }
+    else
+    {
+        printf("Device already disconnected\n");
+    }
+}
+
+Controller::~Controller()
+{
+    if(m_IsInitialized && m_Com.IsConnected())
+        Disconnect();
 }
