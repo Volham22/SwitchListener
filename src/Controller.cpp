@@ -91,7 +91,7 @@ bool Controller::DoHandshake()
         return false;
     }
 
-    printf("=======End of Handshake=======\n");
+    printf("=======End of Handshake=======\n\n");
 
     if(!m_Com.IsConnected())
     {
@@ -178,10 +178,12 @@ bool Controller::Disconnect()
         m_Com.SendSubCommandToDevice(buffer, 0x1, 0x06);
 
         printf("Device Disconnected\n");
+        return true;
     }
     else
     {
         printf("Device already disconnected\n");
+        return false;
     }
 }
 

@@ -32,8 +32,8 @@ bool HidScanner::ScanForControllers()
     {
         devicePrint(devIter);
 
-        if(!devIter->product_id != (unsigned short)m_WantedType
-           || !m_ControllerHandle) // Check if the controller isn't already found
+        if(devIter->product_id == (unsigned short)m_WantedType
+           && !m_ControllerHandle) // Check if the controller isn't already found
         {
             m_ControllerHandle = devIter;
             m_Device = hid_open_path(devIter->path);
