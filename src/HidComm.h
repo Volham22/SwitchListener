@@ -23,7 +23,7 @@ public:
     void SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID);
     void SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID);
     HIDBuffer ReadOnDevice();
-    void ExchangeOnDevice(HIDBuffer buffer);
+    HIDBuffer ExchangeOnDevice(HIDBuffer buffer);
     inline bool IsConnected() const { return m_isConnected; }
     inline hid_device* GetDevice() const { return m_Device; }
 private:

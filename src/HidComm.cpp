@@ -68,7 +68,7 @@ HIDBuffer HidIO::ReadOnDevice()
     }
 }
 
-void HidIO::ExchangeOnDevice(HIDBuffer buffer)
+HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
 {
     printf("Send:\n");
     PrintData(buffer);
@@ -76,14 +76,17 @@ void HidIO::ExchangeOnDevice(HIDBuffer buffer)
     hid_write(m_Device, buffer.Buffer, buffer.BufferSize);
 
     int res = hid_read(m_Device, buffer.Buffer, INPUT_BUFFER_SIZE);
+
     if(res > 0)
     {
         printf("Receive:\n");
         PrintData(buffer);
+        return buffer; // Return data sent by the controller
     }
     else
     {
         printf("The controller returned nothing.");
+        return { 0, 0 }; // Return null
     }
 }
 
