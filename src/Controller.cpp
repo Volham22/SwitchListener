@@ -3,6 +3,8 @@
 #include <cstring>
 #include <cstdio>
 
+#include "AnswerReader.h"
+
 
 Controller::Controller(hid_device* device)
 : m_Com(device), m_Device(nullptr), m_IsInitialized(false)
@@ -84,6 +86,42 @@ bool Controller::DoHandshake()
 
         m_Com.SendSubCommandToDevice(command, 0x1, 0x30);
         printf("Enabled some leds.\n");
+    }
+    else
+    {
+        printf("=======End of Handshake=======\n");
+        return false;
+    }
+
+    if(m_Com.IsConnected())
+    {
+        AnswerReader reader;
+
+        HIDBuffer buffer = m_Com.ReadOnDevice();
+        BatteryLevel battery = reader.ReadBatteryLevel(buffer);
+
+        switch(battery)
+        {
+            case BatteryLevel::High:
+                printf("Battery: High\n");
+                break;
+
+            case BatteryLevel::Medium:
+                printf("Battery: Medium\n");
+                break;
+
+            case BatteryLevel::Low:
+                printf("Battery: Low\n");
+                break;
+
+            case BatteryLevel::Critical:
+                printf("Battery: Critical\n");
+                break;
+
+            case BatteryLevel::Unknow:
+                printf("Battery: Unknow state\n");
+                break;
+        }
     }
     else
     {

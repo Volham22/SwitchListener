@@ -58,9 +58,18 @@ HIDBuffer HidIO::ReadOnDevice()
 
         int result = hid_read(m_Device, data.Buffer, data.BufferSize);
         if(result > 0)
+        {
+            data.BufferSize = 12;
+            
+            printf("Receive:\n");
+            PrintData(data);
             return data;
+        }
         else
+        {
+            printf("Failed to read on device\n");
             return SetDisconnected(); // If reading failed return HIDBuffer initialized with 0
+        }
     }
     else
     {
