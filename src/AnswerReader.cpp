@@ -1,6 +1,7 @@
 #include "AnswerReader.h"
 
 #include <stdio.h>
+#include <cstring>
 
 static void PrintBytes(const uchar &byte)
 {
@@ -23,28 +24,33 @@ BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
 {
     if(IsStandardInput(reply))
     {
-        switch(reply.Buffer[2])
+        uint8_t batteryInfo = reply.Buffer[2];
+        batteryInfo = batteryInfo >> 4;
+
+        switch(batteryInfo)
         {
             case 8:
-            return BatteryLevel::High;
+                return BatteryLevel::High;
 
             case 6:
-            return BatteryLevel::Medium;
+                return BatteryLevel::Medium;
 
             case 4:
-            return BatteryLevel::Low;
+                return BatteryLevel::Low;
 
             case 2:
-            return BatteryLevel::Critical;
+                return BatteryLevel::Critical;
 
             default:
-            PrintBytes(reply.Buffer[2]);
-            return BatteryLevel::Unknow;
+                printf("Battery:\n  ");
+                PrintBytes(batteryInfo);
+                return BatteryLevel::Unknow;
         }
     }
     else
     {
-        PrintBytes(reply.Buffer[2]);
+        printf("Battery:\n  ");
+        PrintBytes(reply.Buffer[2] >> 4);
         return BatteryLevel::Unknow;
     }
 }
@@ -64,7 +70,8 @@ BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
 bool AnswerReader::IsStandardInput(const HIDBuffer &reply) const
 {
     if(reply.Buffer[0] == 0x30 || reply.Buffer[0] == 0x31
-    || reply.Buffer[0] == 0x32 || reply.Buffer[0] == 0x33)
+    || reply.Buffer[0] == 0x32 || reply.Buffer[0] == 0x33
+    || reply.Buffer[0] == 0x21)
         return true;
     else
         return false;

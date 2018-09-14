@@ -99,7 +99,7 @@ HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
     }
 }
 
-void HidIO::SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID)
+HIDBuffer HidIO::SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID)
 {
     unsigned char buf[0x400];
     memset(buf, 0, 0x400);
@@ -112,13 +112,13 @@ void HidIO::SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID)
     buffer.BufferSize = commandBuffer.BufferSize;
     memcpy(buffer.Buffer, buf, INPUT_BUFFER_SIZE);
 
-    ExchangeOnDevice(buffer);
+    return ExchangeOnDevice(buffer);
     
-    if(commandBuffer.Buffer)
-        memcpy(commandBuffer.Buffer, buf, 0x40);
+    /*if(commandBuffer.Buffer)
+        memcpy(commandBuffer.Buffer, buf, 0x40);*/
 }
 
-void HidIO::SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID)
+HIDBuffer HidIO::SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID)
 {
     unsigned char buf[0x400];
     memset(buf, 0, 0x400);
@@ -134,8 +134,8 @@ void HidIO::SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, u
     send.BufferSize = commandBuffer.BufferSize + 10;
     memcpy(send.Buffer, buf, INPUT_BUFFER_SIZE);
         
-    SendCommandToDevice(send, commandID);
+    return SendCommandToDevice(send, commandID);
         
-    if(commandBuffer.Buffer)
-        memcpy(commandBuffer.Buffer, buf, 0x40);
+    /*if(commandBuffer.Buffer)
+        memcpy(commandBuffer.Buffer, buf, 0x40);*/
 }

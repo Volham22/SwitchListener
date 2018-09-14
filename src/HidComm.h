@@ -20,8 +20,8 @@ class HidIO
 public:
     HidIO(hid_device* device);
     void WriteOnDevice(const HIDBuffer &data);
-    void SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID);
-    void SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID);
+    HIDBuffer SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID);
+    HIDBuffer SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID);
     HIDBuffer ReadOnDevice();
     HIDBuffer ExchangeOnDevice(HIDBuffer buffer);
     inline bool IsConnected() const { return m_isConnected; }

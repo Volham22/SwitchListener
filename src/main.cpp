@@ -30,6 +30,8 @@ int main()
             std::cout << "Sucessfully Init" << std::endl;
         else
             std::cout << "Error in HandShake !" << std::endl;
+
+        std::cin.get();
     }
 
 

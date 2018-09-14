@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <cstdio>
+#include <unistd.h>
 
 #include "AnswerReader.h"
 
@@ -96,11 +97,20 @@ bool Controller::DoHandshake()
     if(m_Com.IsConnected())
     {
         AnswerReader reader;
+        HIDBuffer buff;
+        BatteryLevel level;
+        int retry = 0;
 
-        HIDBuffer buffer = m_Com.ReadOnDevice();
-        BatteryLevel battery = reader.ReadBatteryLevel(buffer);
+        for(int i = 0; i<5; i++) // 5 retry for reading battery level
+        {
+            buff = m_Com.ReadOnDevice();
+            level = reader.ReadBatteryLevel(buff);
 
-        switch(battery)
+            if(level != BatteryLevel::Unknow)
+                break;
+        } 
+
+        switch(level)
         {
             case BatteryLevel::High:
                 printf("Battery: High\n");
@@ -119,9 +129,9 @@ bool Controller::DoHandshake()
                 break;
 
             case BatteryLevel::Unknow:
-                printf("Battery: Unknow state\n");
+                printf("Battery: Unknow or empty\n");
                 break;
-        }
+        }       
     }
     else
     {
