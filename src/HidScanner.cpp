@@ -38,6 +38,12 @@ bool HidScanner::ScanForControllers()
             m_ControllerHandle = devIter;
             m_Device = hid_open_path(devIter->path);
 
+            if(!wcscmp(devIter->serial_number, BT_SERIAL_NUMBER)) // USB isn't supported
+            {
+                printf("A USB controller has been found:\n Please use it over Bluetooth\n");
+                break;
+            }
+
             hid_free_enumeration(devs);
             return true;
         }
@@ -46,9 +52,6 @@ bool HidScanner::ScanForControllers()
             break;
         }
                 
-        if(!wcscmp(devIter->serial_number, BT_SERIAL_NUMBER)) // USB isn't supported
-            printf("A USB controller has been found:\n Please use it over Bluetooth");
-
         devIter->next;
     }
 
