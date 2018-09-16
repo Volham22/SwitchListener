@@ -15,42 +15,37 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
 {
     if(IsStandardInput(reply))
     {
-        const uint8_t sample = 1;
-        ButtonsReport report;
-        /* 
-         * Reading the third byte
-         * Y, X, B, A, SR, SL, R, ZR
-         */
-        for(int i = 0; i<=8; i++)
-        {
-            if(reply.Buffer[3] & (sample << i))
-                report.ButtonsStates[i] = true;
-            else
-                report.ButtonsStates[i] = false;
-        }
-
+        ButtonsReport report = { false, 0 };
         /* 
          * Reading the fourth byte
-         * Minus, Plus, RStick, LStick, Home, Capture, unknow, unknow
+         * Y, X, B, A, SR, SL, R, ZR
          */
-        for(int i = 0; i<=5; i++)
+        for(int i = 0; i<8; i++)
         {
-            if(reply.Buffer[4] & (sample << i))
-                report.ButtonsStates[7 + i] = true;
-            else
-                report.ButtonsStates[7 + i] = false;
+            if(reply.Buffer[3] & (1 << i))
+                report.ButtonsStates[i] = true;
         }
 
         /* 
          * Reading the fifth byte
+         * Minus, Plus, RStick, LStick, Home, Capture, unknow, unknow
+         */
+        for(int i = 0; i<6; i++)
+        {
+            if(reply.Buffer[4] & (1 << i))
+                report.ButtonsStates[8 + i] = true;
+
+        }
+
+        /* 
+         * Reading the sixth byte
          * Down, Up, Right, Left, SR, SL, L, ZL
          */
-        for(int i = 0; i<=8; i++)
+        for(int i = 0; i<8; i++)
         {
-            if(reply.Buffer[5] & (sample << i))
-                report.ButtonsStates[13 + i] = true;
-            else
-                report.ButtonsStates[13 + i] = false;
+            if(reply.Buffer[5] & (1 << i))
+                report.ButtonsStates[14 + i] = true;
+
         }
 
         /* Reporting Battery level */

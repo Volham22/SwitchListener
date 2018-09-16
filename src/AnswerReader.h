@@ -11,6 +11,7 @@ enum Buttons {
      SR,
      SL,
      R,
+     ZR,
      Minus,
      Plus,
      RStick,
@@ -21,14 +22,13 @@ enum Buttons {
      Up,
      Right,
      Left,
-     ZR,
-     ZL,
-     L
+     L,
+     ZL
 };
 
 struct ButtonsReport // Contain all buttons states
 {
-    bool ButtonsStates[20];
+    bool ButtonsStates[22];
     int ControllerBattery;
 };
 
