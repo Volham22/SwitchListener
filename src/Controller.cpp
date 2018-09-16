@@ -7,6 +7,32 @@
 #include "AnswerReader.h"
 
 
+static void PrintBatteryLevel(const BatteryLevel &level)
+{
+    switch(level)
+    {
+        case BatteryLevel::High:
+            printf("Battery: High\n");
+            break;
+
+        case BatteryLevel::Medium:
+            printf("Battery: Medium\n");
+            break;
+
+        case BatteryLevel::Low:
+            printf("Battery: Low\n");
+            break;
+
+        case BatteryLevel::Critical:
+            printf("Battery: Critical\n");
+            break;
+
+        case BatteryLevel::Unknow:
+            printf("Battery: Unknow or empty\n");
+            break;
+    }  
+}
+
 Controller::Controller(hid_device* device)
 : m_Com(device), m_Device(nullptr), m_IsInitialized(false)
 {
@@ -110,28 +136,7 @@ bool Controller::DoHandshake()
                 break;
         } 
 
-        switch(level)
-        {
-            case BatteryLevel::High:
-                printf("Battery: High\n");
-                break;
-
-            case BatteryLevel::Medium:
-                printf("Battery: Medium\n");
-                break;
-
-            case BatteryLevel::Low:
-                printf("Battery: Low\n");
-                break;
-
-            case BatteryLevel::Critical:
-                printf("Battery: Critical\n");
-                break;
-
-            case BatteryLevel::Unknow:
-                printf("Battery: Unknow or empty\n");
-                break;
-        }       
+        PrintBatteryLevel(level);      
     }
     else
     {
@@ -265,6 +270,7 @@ void Controller::DoControllerRoutine()
         printf("Button Left: %i\n", report.ButtonsStates[16] ? 1 : 0);
         printf("Button ZL: %i\n", report.ButtonsStates[18] ? 1 : 0);
         printf("Button L: %i\n", report.ButtonsStates[19] ? 1 : 0);
+        PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
         printf("=========================\n");
 
         usleep(20);
