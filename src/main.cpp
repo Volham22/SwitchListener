@@ -33,7 +33,11 @@ int main()
 
         std::cin.get();
     }
-
+    else
+    {
+        wprintf(L"Error: %s", hid_error(controllerHandler));
+        return EXIT_FAILURE;
+    }
 
     return 0;
 }
