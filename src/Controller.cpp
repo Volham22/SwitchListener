@@ -235,6 +235,42 @@ bool Controller::Disconnect()
     }
 }
 
+void Controller::DoControllerRoutine()
+{
+    AnswerReader reader;
+
+    while(m_Com.IsConnected())
+    {
+        HIDBuffer reportBuffer = m_Com.ReadOnDevice();
+        ButtonsReport report = reader.ReadAnswer(reportBuffer);
+
+        // Print result in console for test purpose
+        printf("======Button Report======\n");
+        printf("Button Y: %i\n", report.ButtonsStates[0] ? 1 : 0);
+        printf("Button X: %i\n", report.ButtonsStates[1] ? 1 : 0);
+        printf("Button B: %i\n", report.ButtonsStates[2] ? 1 : 0);
+        printf("Button A: %i\n", report.ButtonsStates[3] ? 1 : 0);
+        printf("Button SR: %i\n", report.ButtonsStates[4] ? 1 : 0);
+        printf("Button SL: %i\n", report.ButtonsStates[5] ? 1 : 0);
+        printf("Button R: %i\n", report.ButtonsStates[6] ? 1 : 0);
+        printf("Button Minus: %i\n", report.ButtonsStates[7] ? 1 : 0);
+        printf("Button Plus: %i\n", report.ButtonsStates[8] ? 1 : 0);
+        printf("Button RStick: %i\n", report.ButtonsStates[9] ? 1 : 0);
+        printf("Button LStick: %i\n", report.ButtonsStates[10] ? 1 : 0);
+        printf("Button Home: %i\n", report.ButtonsStates[11] ? 1 : 0);
+        printf("Button Capture: %i\n", report.ButtonsStates[12] ? 1 : 0);
+        printf("Button Down: %i\n", report.ButtonsStates[13] ? 1 : 0);
+        printf("Button Up: %i\n", report.ButtonsStates[14] ? 1 : 0);
+        printf("Button Right: %i\n", report.ButtonsStates[15] ? 1 : 0);
+        printf("Button Left: %i\n", report.ButtonsStates[16] ? 1 : 0);
+        printf("Button ZL: %i\n", report.ButtonsStates[18] ? 1 : 0);
+        printf("Button L: %i\n", report.ButtonsStates[19] ? 1 : 0);
+        printf("=========================\n");
+
+        usleep(20);
+    }
+}
+
 Controller::~Controller()
 {
     if(m_IsInitialized && m_Com.IsConnected())

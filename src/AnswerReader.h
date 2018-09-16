@@ -3,29 +3,32 @@
 
 #include "HidComm.h"
 
+enum Buttons {
+     Y,
+     X,
+     B,
+     A,
+     SR,
+     SL,
+     R,
+     Minus,
+     Plus,
+     RStick,
+     LStick,
+     Home,
+     Capture,
+     Down,
+     Up,
+     Right,
+     Left,
+     ZR,
+     ZL,
+     L
+};
+
 struct ButtonsReport // Contain all buttons states
 {
-    bool X;
-    bool Y;
-    bool B;
-    bool A;
-    bool SR;
-    bool SL;
-    bool R;
-    bool ZR;
-    bool Minus;
-    bool Plus;
-    bool RStick;
-    bool LStick;
-    bool Home;
-    bool Capture;
-    bool Down;
-    bool Up;
-    bool Right;
-    bool Left;
-    bool L;
-    bool ZL;
-
+    bool ButtonsStates[20];
     int ControllerBattery;
 };
 

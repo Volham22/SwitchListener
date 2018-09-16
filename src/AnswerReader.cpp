@@ -13,10 +13,50 @@ AnswerReader::AnswerReader() {}
 
 ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
 {
-    if(reply.Buffer[0] == 0x30 || reply.Buffer[0] == 0x31
-    || reply.Buffer[0] == 0x32 || reply.Buffer[0] == 0x33)
+    if(IsStandardInput(reply))
     {
-        // TODO:
+        const uint8_t sample = 1;
+        ButtonsReport report;
+        /* 
+         * Reading the third byte
+         * Y, X, B, A, SR, SL, R, ZR
+         */
+        for(int i = 0; i<=8; i++)
+        {
+            if(reply.Buffer[3] & (sample << i))
+                report.ButtonsStates[i] = true;
+            else
+                report.ButtonsStates[i] = false;
+        }
+
+        /* 
+         * Reading the fourth byte
+         * Minus, Plus, RStick, LStick, Home, Capture, unknow, unknow
+         */
+        for(int i = 0; i<=5; i++)
+        {
+            if(reply.Buffer[4] & (sample << i))
+                report.ButtonsStates[7 + i] = true;
+            else
+                report.ButtonsStates[7 + i] = false;
+        }
+
+        /* 
+         * Reading the fifth byte
+         * Down, Up, Right, Left, SR, SL, L, ZL
+         */
+        for(int i = 0; i<=8; i++)
+        {
+            if(reply.Buffer[5] & (sample << i))
+                report.ButtonsStates[13 + i] = true;
+            else
+                report.ButtonsStates[13 + i] = false;
+        }
+
+        /* Reporting Battery level */
+        report.ControllerBattery = ReadBatteryLevel(reply);
+
+        return report;
     }
 }
 

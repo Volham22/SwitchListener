@@ -10,6 +10,7 @@ public:
     bool DoHandshake();
     bool SetVibration(bool active);
     bool EnableIMU(bool active);
+    void DoControllerRoutine();
     ~Controller();
 private:
     hid_device* m_Device;

@@ -31,6 +31,7 @@ int main()
         else
             std::cout << "Error in HandShake !" << std::endl;
 
+        controller.DoControllerRoutine();
         std::cin.get();
     }
     else
