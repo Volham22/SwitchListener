@@ -244,6 +244,8 @@ void Controller::DoControllerRoutine()
 {
     AnswerReader reader;
 
+    printf("Starting routine dialog ...\n");
+
     while(m_Com.IsConnected())
     {
         HIDBuffer reportBuffer = m_Com.ReadOnDevice();
@@ -258,7 +260,7 @@ void Controller::DoControllerRoutine()
         printf("Button SR: %i\n", report.ButtonsStates[4] ? 1 : 0);
         printf("Button SL: %i\n", report.ButtonsStates[5] ? 1 : 0);
         printf("Button R: %i\n", report.ButtonsStates[6] ? 1 : 0);
-        printf("Button ZL: %i\n", report.ButtonsStates[7] ? 1 : 0);
+        printf("Button ZR: %i\n", report.ButtonsStates[7] ? 1 : 0);
         printf("Button Minus: %i\n", report.ButtonsStates[8] ? 1 : 0);
         printf("Button Plus: %i\n", report.ButtonsStates[9] ? 1 : 0);
         printf("Button RStick: %i\n", report.ButtonsStates[10] ? 1 : 0);

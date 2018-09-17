@@ -16,36 +16,20 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
     if(IsStandardInput(reply))
     {
         ButtonsReport report = { false, 0 };
-        /* 
-         * Reading the fourth byte
-         * Y, X, B, A, SR, SL, R, ZR
-         */
-        for(int i = 0; i<8; i++)
+        int position = 0;
+
+        for(int iByte = 3; iByte<=5; iByte++)
         {
-            if(reply.Buffer[3] & (1 << i))
-                report.ButtonsStates[i] = true;
-        }
+            for(unsigned int iBit = 0; iBit<8; iBit++)
+            {
+                printf("%i \n", position);
 
-        /* 
-         * Reading the fifth byte
-         * Minus, Plus, RStick, LStick, Home, Capture, unknow, unknow
-         */
-        for(int i = 0; i<6; i++)
-        {
-            if(reply.Buffer[4] & (1 << i))
-                report.ButtonsStates[8 + i] = true;
+                report.ButtonsStates[position] = reply.Buffer[iByte] & (1 << iBit);
+                position++;
 
-        }
-
-        /* 
-         * Reading the sixth byte
-         * Down, Up, Right, Left, SR, SL, L, ZL
-         */
-        for(int i = 0; i<8; i++)
-        {
-            if(reply.Buffer[5] & (1 << i))
-                report.ButtonsStates[14 + i] = true;
-
+                if(iByte == 4 && iBit == 5) // No need to scan 2 last bits in the fith byte
+                    break;
+            }
         }
 
         /* Reporting Battery level */

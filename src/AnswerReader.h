@@ -22,8 +22,8 @@ enum Buttons {
      Up,
      Right,
      Left,
-     L,
-     ZL
+     L  = 20,
+     ZL = 21
 };
 
 struct ButtonsReport // Contain all buttons states
