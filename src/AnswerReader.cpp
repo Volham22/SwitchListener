@@ -22,8 +22,6 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
         {
             for(unsigned int iBit = 0; iBit<8; iBit++)
             {
-                printf("%i \n", position);
-
                 report.ButtonsStates[position] = reply.Buffer[iByte] & (1 << iBit);
                 position++;
 
