@@ -30,6 +30,14 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
             }
         }
 
+        /* Left Stick */
+        report.StickLeft.Horizontal = reply.Buffer[6] | ((reply.Buffer[7] & 0xF) << 8);
+        report.StickLeft.Vertical = (reply.Buffer[7] >> 4) | (reply.Buffer[8] << 4);
+
+        /* Right Stick */
+        report.StickRight.Horizontal = reply.Buffer[9] | ((reply.Buffer[10] & 0xF) << 8);
+        report.StickRight.Vertical = (reply.Buffer[10] >> 4) | (reply.Buffer[11] << 4);
+
         /* Reporting Battery level */
         report.ControllerBattery = ReadBatteryLevel(reply);
 
