@@ -33,4 +33,5 @@ Tools :
 
 clean :
 	@rm $(EXECUTABLE_NAME) ListHIDDevice
+	@rm $(OBJECTS_FILES)
 	@echo "Cleaned"
