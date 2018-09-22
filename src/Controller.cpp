@@ -277,6 +277,13 @@ void Controller::DoControllerRoutine()
         printf("Right Stick x: %i\n", report.StickRight.Horizontal);
         printf("Left Stick y: %i\n", report.StickLeft.Vertical);
         printf("Left Stick x: %i\n", report.StickLeft.Horizontal);
+        printf("Accelerometer x: %i\n", report.Sensors.AccelX);
+        printf("Accelerometer y: %i\n", report.Sensors.AccelY);
+        printf("Accelerometer z: %i\n", report.Sensors.AccelZ);
+        
+        for(int i = 0; i<3; i++)
+            printf("Gyroscope%i: %i\n", i, report.Sensors.GyroData[i]);
+
         PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
         printf("=========================\n");
 

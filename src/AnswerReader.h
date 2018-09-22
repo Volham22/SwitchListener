@@ -32,6 +32,15 @@ struct StickReport
     uint16_t Vertical;
 };
 
+struct SensorsReport
+{
+    uint16_t AccelX;
+    uint16_t AccelY;
+    uint16_t AccelZ;
+
+    uint16_t GyroData[3];
+};
+
 struct ButtonsReport // Contain all buttons states
 {
     bool ButtonsStates[22];
@@ -39,6 +48,8 @@ struct ButtonsReport // Contain all buttons states
 
     StickReport StickLeft;
     StickReport StickRight;
+
+    SensorsReport Sensors;
 };
 
 
@@ -56,6 +67,7 @@ public:
 private:
     void AnalyzeInputType(const HIDBuffer &reply) const;
     bool IsStandardInput(const HIDBuffer &reply) const;
+    SensorsReport DecodeSensors(const HIDBuffer &reply) const;
 };
 
 #endif

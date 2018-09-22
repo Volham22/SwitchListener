@@ -38,6 +38,9 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
         report.StickRight.Horizontal = reply.Buffer[9] | ((reply.Buffer[10] & 0xF) << 8);
         report.StickRight.Vertical = (reply.Buffer[10] >> 4) | (reply.Buffer[11] << 4);
 
+        /* Reading Sensors */
+        report.Sensors = DecodeSensors(reply);
+
         /* Reporting Battery level */
         report.ControllerBattery = ReadBatteryLevel(reply);
 
@@ -91,6 +94,35 @@ BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
     /* Command ID 0x30 0x31 0x32 0x33 */
     // TODO:
 //}
+
+SensorsReport AnswerReader::DecodeSensors(const HIDBuffer &reply) const
+{
+    SensorsReport report = { 0, 0, 0 };
+    uint16_t* accel = nullptr;
+
+    /* Accelerometer X byte 13, 14 */
+    accel = (uint16_t*)reply.Buffer + 13;
+    report.AccelX = *accel;
+
+    /* Accelerometer Y byte 15, 16 */
+    accel = (uint16_t*)reply.Buffer + 15;
+    report.AccelY = *accel;
+
+    /* Accelerometer Z byte 17, 18 */
+    accel = (uint16_t*)reply.Buffer + 17;
+    report.AccelZ = *accel;
+
+    /* Gyroscope Data byte 19 to 24 */
+    int cnt = 0;
+    for(unsigned int i = 19; i<24; i+=2)
+    {
+        accel = (uint16_t*)reply.Buffer + i;
+        report.GyroData[cnt] = *accel;
+        cnt++;
+    }
+
+    return report;
+}
 
 bool AnswerReader::IsStandardInput(const HIDBuffer &reply) const
 {
