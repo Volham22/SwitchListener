@@ -125,7 +125,6 @@ bool Controller::DoHandshake()
         AnswerReader reader;
         HIDBuffer buff;
         BatteryLevel level;
-        int retry = 0;
 
         for(int i = 0; i<5; i++) // 5 retry for reading battery level
         {
