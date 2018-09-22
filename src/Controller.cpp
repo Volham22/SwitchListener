@@ -272,11 +272,11 @@ void Controller::DoControllerRoutine()
         printf("Button Right: %i\n", report.ButtonsStates[16] ? 1 : 0);
         printf("Button Left: %i\n", report.ButtonsStates[17] ? 1 : 0);
         printf("Button L: %i\n", report.ButtonsStates[20] ? 1 : 0);
-        printf("Right Stick y: %i", report.StickRight.Vertical);
-        printf("Right Stick x: %i", report.StickRight.Horizontal);
-        printf("Left Stick y: %i", report.StickLeft.Vertical);
-        printf("Left Stick x: %i", report.StickLeft.Horizontal);
         printf("Button ZL: %i\n", report.ButtonsStates[21] ? 1 : 0);
+        printf("Right Stick y: %i\n", report.StickRight.Vertical);
+        printf("Right Stick x: %i\n", report.StickRight.Horizontal);
+        printf("Left Stick y: %i\n", report.StickLeft.Vertical);
+        printf("Left Stick x: %i\n", report.StickLeft.Horizontal);
         PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
         printf("=========================\n");
 
