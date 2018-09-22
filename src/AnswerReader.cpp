@@ -46,6 +46,10 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
 
         return report;
     }
+    else
+    {
+        return { 0, 0, 0, 0, 0 };
+    }
 }
 
 BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
