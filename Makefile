@@ -20,3 +20,4 @@ $(TARGET): $(OBJS)
 clean:
 	rm -f $(TARGET)
 	rm -f $(OBJS)
+	rm -f ListHIDDevice

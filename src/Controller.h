@@ -11,6 +11,7 @@ public:
     bool SetVibration(bool active);
     bool EnableIMU(bool active);
     bool SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf = true, const bool &accelAAFilter = true);
+    bool SwitchPlayerLedOn(const uint8_t &ledNumber);
     void DoControllerRoutine();
     ~Controller();
 private:

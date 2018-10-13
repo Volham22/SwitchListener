@@ -107,14 +107,7 @@ bool Controller::DoHandshake()
     // Enable Player leds
     if(m_Com.IsConnected())
     {
-        command = initBuffer(); // Reset buffer
-
-        command.Buffer[0] = 0x01 | 0x00 | 0x00 | 0x00; // Enable
-        command.Buffer[1] = 0x00 | 0x00 | 0x00 | 0x00;
-        command.BufferSize = 2;
-
-        m_Com.SendSubCommandToDevice(command, 0x1, 0x30);
-        printf("Enabled some leds.\n");
+        SwitchPlayerLedOn(1);
     }
     else
     {
@@ -243,6 +236,44 @@ bool Controller::SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acel
         m_Com.SendSubCommandToDevice(args, 0x1, 0x41);
 
         return true;
+    }
+    else
+    {
+        printf("Communication with Controller failed.\n Is the Controller connected?\n");
+        return false;
+    }
+}
+
+bool Controller::SwitchPlayerLedOn(const uint8_t &ledNumber)
+{
+    /*
+     * ledNumber must be between 1 and 4
+     * 1 : Switch the first left led on
+     * 2 : Switch the second left led on
+     * 3 : Switch the third left led on
+     * 4 : Switch the fourth left led on
+     */
+
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer args = initBuffer();
+        args.BufferSize = 2;
+
+        if(ledNumber >= 1 && ledNumber <= 4)
+        {
+            args.Buffer[0] = ledNumber | 0x00 | 0x00 | 0x00;
+            args.Buffer[1] = 0x00 | 0x00 | 0x00 | 0x00;
+
+            m_Com.SendSubCommandToDevice(args, 0x1, 0x30);
+            printf("Led %i activated.\n", ledNumber);
+
+            return true;
+        }
+        else
+        {
+            printf("Warning: Led value must be between 1 and 4 !\n");
+            return false;
+        }
     }
     else
     {
