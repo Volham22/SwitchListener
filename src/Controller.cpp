@@ -77,7 +77,9 @@ bool Controller::DoHandshake()
         // Enable IMU (Controller sensors) (command 0x40)
         command.Buffer[0] = 0x01; // Set it to true
         command.BufferSize = 1;
-        m_Com.SendSubCommandToDevice(command, 0x1, 0x40);
+        m_Com.SendSubCommandToDevice(command, 0x1, 0x40); // Enable it
+        usleep(50);
+        SetIMUSensitivity(3, 0, true, true); // Set Sensors to the defaults parameters
         printf("Enabled IMU\n");
     }
     else
@@ -211,6 +213,36 @@ bool Controller::EnableIMU(bool active)
             printf("Disabled IMU\n");
             return true;   
         }
+    }
+    else
+    {
+        printf("Communication with Controller failed.\n Is the Controller connected?\n");
+        return false;
+    }
+}
+
+bool Controller::SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf, const bool &accelAAFilter)
+{
+    /*
+     * The gyroscope sensitivity must be an integer betwenn 0 and 3
+     * The accelerometer sensitivity must be an integer between 0 and 3
+     * Gyroscope performance : True, 208hz (default), False 833hz
+     * Accelerometer Anti-aliasing filter bandwidth : True 100hz (default), False 200hz
+     */
+
+    HIDBuffer args = initBuffer();
+    args.BufferSize = 3;
+
+    if(m_Com.IsConnected())
+    {
+        args.Buffer[0] = gyroSensi;
+        args.Buffer[1] = acellsensi;
+        args.Buffer[2] = gyroPerf ? 1 : 0;
+        args.Buffer[3] = accelAAFilter ? 1 : 0;
+        
+        m_Com.SendSubCommandToDevice(args, 0x1, 0x41);
+
+        return true;
     }
     else
     {
