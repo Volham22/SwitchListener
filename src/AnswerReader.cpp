@@ -130,10 +130,24 @@ SensorsReport AnswerReader::DecodeSensors(const HIDBuffer &reply) const
 
 bool AnswerReader::IsStandardInput(const HIDBuffer &reply) const
 {
-    if(reply.Buffer[0] == 0x30 || reply.Buffer[0] == 0x31
-    || reply.Buffer[0] == 0x32 || reply.Buffer[0] == 0x33
-    || reply.Buffer[0] == 0x21)
-        return true;
-    else
-        return false;
+    switch(reply.Buffer[0])
+    {
+        case 0x30:
+            return true;
+        
+        case 0x31:
+            return true;
+
+        case 0x32:
+            return true;
+
+        case 0x33:
+            return true;
+
+        case 0x21:
+            return true;
+
+        default:
+            return false;
+    }
 }
