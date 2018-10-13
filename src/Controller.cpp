@@ -63,6 +63,7 @@ bool Controller::DoHandshake()
         command.BufferSize = 1; // still size of uint8_t
         m_Com.SendSubCommandToDevice(command, 0x1, 0x48);
         printf("Enabled Vibration\n");
+        usleep(50);
     }
     else
     {
@@ -80,6 +81,7 @@ bool Controller::DoHandshake()
         m_Com.SendSubCommandToDevice(command, 0x1, 0x40); // Enable it
         usleep(50);
         SetIMUSensitivity(3, 0, true, true); // Set Sensors to the defaults parameters
+        usleep(50);
         printf("Enabled IMU\n");
     }
     else
@@ -96,6 +98,7 @@ bool Controller::DoHandshake()
         command.Buffer[0] = 0x31; // Larger packet size
         command.BufferSize = 1;
         m_Com.SendSubCommandToDevice(command, 0x1, 0x3);
+        usleep(50);
         printf("Initialized Bluetooth for NFC/IR\n");
     }
     else
