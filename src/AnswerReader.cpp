@@ -22,8 +22,6 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
         {
             for(unsigned int iBit = 0; iBit<8; iBit++)
             {
-                printf("%i \n", position);
-
                 report.ButtonsStates[position] = reply.Buffer[iByte] & (1 << iBit);
                 position++;
 
@@ -32,10 +30,25 @@ ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const
             }
         }
 
+        /* Left Stick */
+        report.StickLeft.Horizontal = reply.Buffer[6] | ((reply.Buffer[7] & 0xF) << 8);
+        report.StickLeft.Vertical = (reply.Buffer[7] >> 4) | (reply.Buffer[8] << 4);
+
+        /* Right Stick */
+        report.StickRight.Horizontal = reply.Buffer[9] | ((reply.Buffer[10] & 0xF) << 8);
+        report.StickRight.Vertical = (reply.Buffer[10] >> 4) | (reply.Buffer[11] << 4);
+
+        /* Reading Sensors */
+        report.Sensors = DecodeSensors(reply);
+
         /* Reporting Battery level */
         report.ControllerBattery = ReadBatteryLevel(reply);
 
         return report;
+    }
+    else
+    {
+        return { 0, 0, 0, 0, 0 };
     }
 }
 
@@ -86,12 +99,55 @@ BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
     // TODO:
 //}
 
+SensorsReport AnswerReader::DecodeSensors(const HIDBuffer &reply) const
+{
+    SensorsReport report = { 0, 0, 0 };
+    uint16_t* accel = nullptr;
+
+    /* Accelerometer X byte 13, 14 */
+    accel = (uint16_t*)reply.Buffer + 13;
+    report.AccelX = *accel;
+
+    /* Accelerometer Y byte 15, 16 */
+    accel = (uint16_t*)reply.Buffer + 15;
+    report.AccelY = *accel;
+
+    /* Accelerometer Z byte 17, 18 */
+    accel = (uint16_t*)reply.Buffer + 17;
+    report.AccelZ = *accel;
+
+    /* Gyroscope Data byte 19 to 24 */
+    int cnt = 0;
+    for(unsigned int i = 19; i<24; i+=2)
+    {
+        accel = (uint16_t*)reply.Buffer + i;
+        report.GyroData[cnt] = *accel;
+        cnt++;
+    }
+
+    return report;
+}
+
 bool AnswerReader::IsStandardInput(const HIDBuffer &reply) const
 {
-    if(reply.Buffer[0] == 0x30 || reply.Buffer[0] == 0x31
-    || reply.Buffer[0] == 0x32 || reply.Buffer[0] == 0x33
-    || reply.Buffer[0] == 0x21)
-        return true;
-    else
-        return false;
+    switch(reply.Buffer[0])
+    {
+        case 0x30:
+            return true;
+        
+        case 0x31:
+            return true;
+
+        case 0x32:
+            return true;
+
+        case 0x33:
+            return true;
+
+        case 0x21:
+            return true;
+
+        default:
+            return false;
+    }
 }

@@ -16,9 +16,14 @@ int main()
     HidScanner scanner(ControllerType::ProController);
 
     if(scanner.ScanForControllers())
+    {
         std::cout << "A Pro Controller has been found !" << std::endl;
+    }
     else
+    {
         std::cout << "Nohing found." << std::endl;
+        return EXIT_FAILURE;
+    }
 
     hid_device* controllerHandler = scanner.GetHidDevice();
 
@@ -40,5 +45,5 @@ int main()
         return EXIT_FAILURE;
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

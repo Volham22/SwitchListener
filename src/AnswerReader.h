@@ -26,11 +26,32 @@ enum Buttons {
      ZL = 21
 };
 
+struct StickReport
+{
+    uint16_t Horizontal;
+    uint16_t Vertical;
+};
+
+struct SensorsReport
+{
+    uint16_t AccelX;
+    uint16_t AccelY;
+    uint16_t AccelZ;
+
+    uint16_t GyroData[3];
+};
+
 struct ButtonsReport // Contain all buttons states
 {
     bool ButtonsStates[22];
     int ControllerBattery;
+
+    StickReport StickLeft;
+    StickReport StickRight;
+
+    SensorsReport Sensors;
 };
+
 
 enum BatteryLevel { Unknow = -1, Critical = 0, Low = 1, Medium = 2, High = 3 };
 
@@ -46,6 +67,7 @@ public:
 private:
     void AnalyzeInputType(const HIDBuffer &reply) const;
     bool IsStandardInput(const HIDBuffer &reply) const;
+    SensorsReport DecodeSensors(const HIDBuffer &reply) const;
 };
 
 #endif

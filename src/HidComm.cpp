@@ -59,7 +59,7 @@ HIDBuffer HidIO::ReadOnDevice()
         int result = hid_read(m_Device, data.Buffer, data.BufferSize);
         if(result > 0)
         {
-            data.BufferSize = 12;
+            data.BufferSize = 24;
             
             printf("Receive:\n");
             PrintData(data);
