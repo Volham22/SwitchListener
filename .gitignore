@@ -5,6 +5,14 @@
 ListHIDDevice
 SwitchListener
 
+# CMakeFiles :
+tools/CMakeFiles/
+tools/cmake*
+CMakeFiles/
+cmake*
+CMakeCache.txt
+Makefile
+
 # Other
 output.txt
 Notes.txt
