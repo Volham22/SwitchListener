@@ -10,9 +10,9 @@ SwitchListener
 tools/CMakeFiles/
 tools/cmake*
 CMakeFiles/
-cmake*
 CMakeCache.txt
 Makefile
+cmake_install.cmake
 
 # Other
 output.txt
