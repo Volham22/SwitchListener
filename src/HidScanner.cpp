@@ -105,7 +105,7 @@ bool HidScanner::ScanForAnyController()
 
 bool HidScanner::InitController(hid_device_info* &iter)
 {
-    printf("A %s has been found", TypeToString(iter->product_id));
+    printf("A %s has been found\n", TypeToString(iter->product_id));
 
     if(!wcscmp(iter->serial_number, BT_SERIAL_NUMBER)) // USB isn't supported
     {
