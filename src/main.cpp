@@ -13,13 +13,9 @@ int main()
         return EXIT_FAILURE;
     }
 
-    HidScanner scanner(ControllerType::JoyConLeft);
+    HidScanner scanner(ControllerType::Any);
 
-    if(scanner.ScanForControllers())
-    {
-        std::cout << "Left joy-con has been found !" << std::endl;
-    }
-    else
+    if(!scanner.ScanForAnyController())
     {
         std::cout << "Nohing found." << std::endl;
         return EXIT_FAILURE;

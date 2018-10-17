@@ -12,14 +12,16 @@
 enum ControllerType { ProController = PRO_CONTROLLER_ID,
                       JoyConRight   = JOYCON_R_ID,
                       JoyConLeft    = JOYCON_L_ID,
+                      Any           = 1,
                       Unknow        = 0 };
 
 
 class HidScanner
 {
 public:
-    HidScanner(ControllerType wantedTyped = ControllerType::ProController);
+    HidScanner(ControllerType wantedTyped = ControllerType::Any);
     bool ScanForControllers(); // Return true if a controller is connected and has a valid hid interface
+    bool ScanForAnyController();
     inline hid_device_info* GetControllerHandle() const { return m_ControllerHandle; };
     inline hid_device* GetHidDevice() const { return m_Device; }
     inline ControllerType GetControllerType() const { return m_Type; }
@@ -28,6 +30,8 @@ private:
     hid_device* m_Device;
     ControllerType m_Type;
     ControllerType m_WantedType;
+
+    bool InitController(hid_device_info* &iter);
 };
 
 #endif
