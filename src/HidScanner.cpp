@@ -18,8 +18,7 @@ static void devicePrint(hid_device_info* device)
 HidScanner::HidScanner(ControllerType wantedTyped)
 : m_ControllerHandle(nullptr), m_Device(nullptr),
   m_Type(ControllerType::Unknow), m_WantedType(wantedTyped)
-{
-}
+{}
 
 bool HidScanner::ScanForControllers()
 {
@@ -52,7 +51,7 @@ bool HidScanner::ScanForControllers()
             break;
         }
                 
-        devIter->next;
+        devIter = devIter->next;
     }
 
     hid_free_enumeration(devs);

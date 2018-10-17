@@ -10,14 +10,14 @@ int main()
     if(res)
     {
         std::cout << "Failed to initialize HidApi." << std::endl;
-        return -1;
+        return EXIT_FAILURE;
     }
 
-    HidScanner scanner(ControllerType::ProController);
+    HidScanner scanner(ControllerType::JoyConLeft);
 
     if(scanner.ScanForControllers())
     {
-        std::cout << "A Pro Controller has been found !" << std::endl;
+        std::cout << "Left joy-con has been found !" << std::endl;
     }
     else
     {
