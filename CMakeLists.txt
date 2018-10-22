@@ -11,13 +11,15 @@ set(SRC
     src/Controller.cpp
     src/HidComm.cpp
     src/HidScanner.cpp
+    src/ConnectionsManager.cpp
     src/main.cpp)
 
 set(HEADERS
     src/AnswerReader.h
     src/Controller.h
     src/HidComm.h
-    src/HidScanner.h)
+    src/HidScanner.h
+    src/ConnectionsManager.h)
 
 add_executable(SwitchListener ${SRC} ${HEADERS})
 
