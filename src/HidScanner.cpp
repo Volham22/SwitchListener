@@ -5,11 +5,11 @@
 
 static void devicePrint(hid_device_info* device)
 {
-    	printf("====Device====\n Vendor ID: %04hx\n Product ID: %04hx\n path: %s\n Serial number: %ls\n",
-			device->vendor_id,
-            device->product_id,
-            device->path,
-            device->serial_number);
+    	printf("====Device====\n Vendor ID: %04hx\n Product ID: %04hx\n Path: %s\n Mac Address: %ls\n",
+			   device->vendor_id,
+               device->product_id,
+               device->path,
+               device->serial_number);
 		printf(" Manufacturer Name: %ls\n", device->manufacturer_string);
 		printf(" Product Name:      %ls\n", device->product_string);
         printf("==============\n");
@@ -90,7 +90,7 @@ bool HidScanner::ScanForAnyController()
         if(!alreadyFound)
         {
             devicePrint(devIter);
-            
+
             switch(devIter->product_id)
             {
                 case JOYCON_L_ID:

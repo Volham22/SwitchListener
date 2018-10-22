@@ -16,6 +16,7 @@ public:
     inline hid_device* GetHidDevice() const { return m_Device; };
     ~Controller();
 private:
+    uint8_t m_ControllerPosition;
     hid_device* m_Device;
     bool m_IsInitialized;
     HidIO m_Com;

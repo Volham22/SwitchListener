@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include <cstring>
 
+#ifdef DEBUG
 static void PrintBytes(const uchar &byte)
 {
     printf("Warning: Unknow value: ");
     printf("%02x\n", byte);
 }
+#endif
 
 AnswerReader::AnswerReader() {}
 
@@ -75,14 +77,18 @@ BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
 
             default:
                 printf("Battery:\n  ");
+                #ifdef DEBUG
                 PrintBytes(batteryInfo);
+                #endif
                 return BatteryLevel::Unknow;
         }
     }
     else
     {
+        #ifdef DEBUG
         printf("Battery:\n  ");
         PrintBytes(reply.Buffer[2] >> 4);
+        #endif
         return BatteryLevel::Unknow;
     }
 }

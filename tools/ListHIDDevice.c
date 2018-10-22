@@ -19,7 +19,7 @@ int main(void)
 
     while (cur_dev)
     {
-    	printf("====Device====\n Vendor ID: %04hx\n Product ID: %04hx\n path: %s\n Serial number: %ls\n",
+    	printf("====Device====\n Vendor ID: %04hx\n Product ID: %04hx\n Path: %s\n Mac Address: %ls\n",
 			cur_dev->vendor_id,
             cur_dev->product_id,
             cur_dev->path,

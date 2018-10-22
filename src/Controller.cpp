@@ -34,7 +34,7 @@ static void PrintBatteryLevel(const BatteryLevel &level)
 }
 
 Controller::Controller(hid_device* device)
-: m_Com(device), m_Device(nullptr), m_IsInitialized(false)
+: m_Com(device), m_Device(nullptr), m_IsInitialized(false), m_ControllerPosition(0)
 {
     if(device) // Check if device exists
         m_Device = device;
@@ -111,6 +111,7 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
     if(m_Com.IsConnected())
     {
         SwitchPlayerLedOn(controllerNumber);
+        m_ControllerPosition = controllerNumber;
     }
     else
     {
@@ -315,9 +316,10 @@ void Controller::DoControllerRoutine()
     {
         HIDBuffer reportBuffer = m_Com.ReadOnDevice();
         ButtonsReport report = reader.ReadAnswer(reportBuffer);
-
+        
+        #ifdef DEBUG
         // Print result in console for test purpose
-        printf("======Button Report======\n");
+        printf("======Button Report for Controller %i ======\n", m_ControllerPosition);
         printf("Button Y: %i\n", report.ButtonsStates[0] ? 1 : 0);
         printf("Button X: %i\n", report.ButtonsStates[1] ? 1 : 0);
         printf("Button B: %i\n", report.ButtonsStates[2] ? 1 : 0);
@@ -350,7 +352,8 @@ void Controller::DoControllerRoutine()
             printf("Gyroscope%i: %i\n", i, report.Sensors.GyroData[i]);
 
         PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
-        printf("=========================\n");
+        printf("=================================\n");
+        #endif
 
         usleep(50);
     }

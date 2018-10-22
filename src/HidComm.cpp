@@ -4,6 +4,7 @@
 #include <cstring>
 #include <unistd.h>
 
+#ifdef DEBUG
 static void PrintData(const HIDBuffer &data)
 {
     for(int i = 0; i<data.BufferSize; i++)
@@ -11,6 +12,7 @@ static void PrintData(const HIDBuffer &data)
 
     printf("\n");
 }
+#endif
 
 HIDBuffer initBuffer()
 {
@@ -61,13 +63,17 @@ HIDBuffer HidIO::ReadOnDevice()
         {
             data.BufferSize = 24;
             
+            #ifdef DEBUG
             printf("Receive:\n");
             PrintData(data);
+            #endif
             return data;
         }
         else
         {
+            #ifdef DEBUG
             printf("Failed to read on device\n");
+            #endif
             return SetDisconnected(); // If reading failed return HIDBuffer initialized with 0
         }
     }
@@ -79,8 +85,10 @@ HIDBuffer HidIO::ReadOnDevice()
 
 HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
 {
+    #ifdef DEBUG
     printf("Send:\n");
     PrintData(buffer);
+    #endif
     
     hid_write(m_Device, buffer.Buffer, buffer.BufferSize);
 
@@ -88,13 +96,17 @@ HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
 
     if(res > 0)
     {
+        #ifdef DEBUG
         printf("Receive:\n");
         PrintData(buffer);
+        #endif
         return buffer; // Return data sent by the controller
     }
     else
     {
+        #ifdef DEBUG
         printf("The controller returned nothing.");
+        #endif
         return { 0, 0 }; // Return null
     }
 }
