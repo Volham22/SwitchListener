@@ -2,6 +2,7 @@
 #define HID_SCANNER_H
 
 #include <hidapi/hidapi.h>
+#include <vector>
 
 #define JOYCON_L_ID (0x2006)
 #define JOYCON_R_ID (0x2007)
@@ -15,6 +16,7 @@ enum ControllerType { ProController = PRO_CONTROLLER_ID,
                       Any           = 1,
                       Unknow        = 0 };
 
+const char* TypeToString(const unsigned short &type);
 
 class HidScanner
 {
@@ -30,6 +32,7 @@ private:
     hid_device* m_Device;
     ControllerType m_Type;
     ControllerType m_WantedType;
+    std::vector<wchar_t*> m_OpenedDevices;
 
     bool InitController(hid_device_info* &iter);
 };

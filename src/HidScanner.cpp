@@ -15,7 +15,7 @@ static void devicePrint(hid_device_info* device)
         printf("==============\n");
 }
 
-static const char* TypeToString(const unsigned short &type)
+const char* TypeToString(const unsigned short &type)
 {
     switch(type)
     {
@@ -79,21 +79,32 @@ bool HidScanner::ScanForAnyController()
 
     while(devIter)
     {
-        devicePrint(devIter);
+        bool alreadyFound = false;
 
-        switch(devIter->product_id)
+        for(unsigned int iOpenedDevice = 0; iOpenedDevice < m_OpenedDevices.size(); iOpenedDevice++)
         {
-            case JOYCON_L_ID:
-                if(InitController(devIter))
-                    return true;
-            
-            case JOYCON_R_ID:
-                if(InitController(devIter))
-                    return true;
+            if(wcscmp(devIter->serial_number, m_OpenedDevices[iOpenedDevice]) == 0)
+                alreadyFound = true;
+        }
 
-            case PRO_CONTROLLER_ID:
-                if(InitController(devIter))
-                    return true;
+        if(!alreadyFound)
+        {
+            devicePrint(devIter);
+            
+            switch(devIter->product_id)
+            {
+                case JOYCON_L_ID:
+                    if(InitController(devIter))
+                        return true;
+                
+                case JOYCON_R_ID:
+                    if(InitController(devIter))
+                        return true;
+
+                case PRO_CONTROLLER_ID:
+                    if(InitController(devIter))
+                        return true;
+            }
         }
                 
         devIter = devIter->next;
@@ -115,6 +126,7 @@ bool HidScanner::InitController(hid_device_info* &iter)
     
     m_ControllerHandle = iter;
     m_Device = hid_open_path(iter->path);
+    m_OpenedDevices.push_back(iter->serial_number);
 
     return true;
 }

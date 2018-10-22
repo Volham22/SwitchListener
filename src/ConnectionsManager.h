@@ -30,7 +30,9 @@ public:
     ~ControllerHandler();
 private:
     int m_Connected;
-    std::vector<std::thread> m_ConnectedControllers;
+    HidScanner m_scanner;
+    std::vector<Controller*> m_ConnectedControllers;
+    std::vector<std::thread*> m_ThreadList;
 };
 
 #endif
