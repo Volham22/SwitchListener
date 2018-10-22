@@ -7,7 +7,7 @@ class Controller
 {
 public:
     Controller(hid_device* device);
-    bool DoHandshake();
+    bool DoHandshake(const uint8_t &controllerNumber);
     bool SetVibration(bool active);
     bool EnableIMU(bool active);
     bool SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf = true, const bool &accelAAFilter = true);

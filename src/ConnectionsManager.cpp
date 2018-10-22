@@ -5,7 +5,7 @@
 #define SCANNING_DELAY 2000 // in ms
 
 ControllerHandler::ControllerHandler()
-: m_Connected(false), m_scanner(ControllerType::Any) {}
+: m_Connected(0), m_scanner(ControllerType::Any) {}
 
 void ControllerHandler::StartListening()
 {
@@ -15,10 +15,10 @@ void ControllerHandler::StartListening()
         if(m_scanner.ScanForAnyController())
         {
             hid_device* controllerHandler = m_scanner.GetHidDevice();
-
             Controller* controller = new Controller(controllerHandler);
+            m_Connected++;
 
-            if(controller->DoHandshake())
+            if(controller->DoHandshake(m_Connected))
             {
                 m_ConnectedControllers.push_back(controller);
                 std::thread* controllerThread = new std::thread(&Controller::DoControllerRoutine, controller);
@@ -27,6 +27,7 @@ void ControllerHandler::StartListening()
             else
             {
                 delete controller;
+                m_Connected--;
                 printf("Warning: Handshake failed for %s\n", TypeToString(m_scanner.GetControllerType()));
             }
         }
@@ -40,6 +41,8 @@ void ControllerHandler::StartListening()
                 m_ThreadList.erase(m_ThreadList.begin() + iThread);
                 delete m_ConnectedControllers[iThread];
                 m_ConnectedControllers.erase(m_ConnectedControllers.begin() + iThread);
+
+                m_Connected--;
             }
         }
 

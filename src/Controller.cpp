@@ -40,7 +40,7 @@ Controller::Controller(hid_device* device)
         m_Device = device;
 }
 
-bool Controller::DoHandshake()
+bool Controller::DoHandshake(const uint8_t &controllerNumber)
 {
     /* 
      * Setting up few things to make the controller working
@@ -110,7 +110,7 @@ bool Controller::DoHandshake()
     // Enable Player leds
     if(m_Com.IsConnected())
     {
-        SwitchPlayerLedOn(1);
+        SwitchPlayerLedOn(controllerNumber);
     }
     else
     {
@@ -352,7 +352,7 @@ void Controller::DoControllerRoutine()
         PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
         printf("=========================\n");
 
-        usleep(20);
+        usleep(50);
     }
 }
 

@@ -29,7 +29,7 @@ public:
     inline int GetConnectedControllers() const { return m_Connected; };
     ~ControllerHandler();
 private:
-    int m_Connected;
+    uint8_t m_Connected;
     HidScanner m_scanner;
     std::vector<Controller*> m_ConnectedControllers;
     std::vector<std::thread*> m_ThreadList;
