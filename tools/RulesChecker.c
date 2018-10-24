@@ -1,6 +1,6 @@
 /*
  *  This program will check if udev rules are set for
- *  the differents Nintendo Controllers are set.
+ *  the differents Nintendo Controllers.
  *   If not it will add the missing ones.
  */
 
