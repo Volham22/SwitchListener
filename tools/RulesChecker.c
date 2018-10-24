@@ -19,11 +19,11 @@ void createRuleFile()
 
         /* Merging strings */
         char* fileString[strlen(BT_PROCONTROLLER_RULE) * 3]; // Create string buffer
-        strcpy(fileString, BT_PROCONTROLLER_RULE);
-        strcat(fileString, BT_LJOYCON_RULE);
-        strcat(fileString, BT_RJOYCON_RULE);
+        strcpy((char*)fileString, BT_PROCONTROLLER_RULE);
+        strcat((char*)fileString, BT_LJOYCON_RULE);
+        strcat((char*)fileString, BT_RJOYCON_RULE);
 
-        fputs(fileString, file);
+        fputs((char*)fileString, file);
         fclose(file);
 
         printf("Done.\n");
@@ -35,11 +35,11 @@ void rewriteRuleFile()
 
         /* Merging strings */
         char* fileString[strlen(BT_PROCONTROLLER_RULE) * 3]; // Create string buffer
-        strcpy(fileString, BT_PROCONTROLLER_RULE);
-        strcat(fileString, BT_LJOYCON_RULE);
-        strcat(fileString, BT_RJOYCON_RULE);
+        strcpy((char*)fileString, BT_PROCONTROLLER_RULE);
+        strcat((char*)fileString, BT_LJOYCON_RULE);
+        strcat((char*)fileString, BT_RJOYCON_RULE);
 
-        fputs(fileString, file);
+        fputs((char*)fileString, file);
         fclose(file);
 
         printf("Done.\n");
