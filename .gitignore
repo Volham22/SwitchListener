@@ -3,6 +3,7 @@
 
 # Binary :
 ListHIDDevice
+RulesChecker
 SwitchListener
 *.o
 
