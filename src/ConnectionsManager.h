@@ -25,11 +25,10 @@ class ControllerHandler
 public:
     ControllerHandler();
     void StartListening();
-    void ListenToControllers();
-    void ShowControllerStates() const;
     inline int GetConnectedControllers() const { return m_Connected; };
     ~ControllerHandler();
 private:
+    void ListenToControllers();
     uint8_t m_Connected;
     HidScanner m_scanner;
     std::vector<Controller*> m_ConnectedControllers;
