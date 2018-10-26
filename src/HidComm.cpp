@@ -105,7 +105,7 @@ HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
     else
     {
         #ifdef DEBUG
-        printf("The controller returned nothing.");
+        printf("The controller returned nothing.\n");
         #endif
         return { 0, 0 }; // Return null
     }
