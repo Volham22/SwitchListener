@@ -9,6 +9,9 @@ ControllerHandler::ControllerHandler()
 
 void ControllerHandler::StartListening()
 {
+    /* Creating Listening Thread */
+    std::thread listeningThread(&ControllerHandler::ListenToControllers, this);
+
     while(true)
     {
         /* Check for new controllers */
@@ -20,9 +23,8 @@ void ControllerHandler::StartListening()
 
             if(controller->DoHandshake(m_Connected))
             {
+                printf("New %s found !\n", TypeToString(m_scanner.GetControllerType()));
                 m_ConnectedControllers.push_back(controller);
-                std::thread* controllerThread = new std::thread(&Controller::DoControllerRoutine, controller);
-                m_ThreadList.push_back(controllerThread);
             }
             else
             {
@@ -32,21 +34,27 @@ void ControllerHandler::StartListening()
             }
         }
 
-        for(unsigned int iThread = 0; iThread < m_ThreadList.size(); iThread++)
-        {
-            if(!m_ThreadList[iThread]->joinable())
-            {
-                /* If thread is stopped, free the memory */
-                delete m_ThreadList[iThread];
-                m_ThreadList.erase(m_ThreadList.begin() + iThread);
-                delete m_ConnectedControllers[iThread];
-                m_ConnectedControllers.erase(m_ConnectedControllers.begin() + iThread);
+        usleep(2000);
+    }
+}
 
+void ControllerHandler::ListenToControllers()
+{
+    while(true)
+    {
+        for(unsigned int iController = 0; iController < m_ConnectedControllers.size(); iController++)
+        {
+            m_ConnectedControllers[iController]->DoControllerRoutine();
+
+            if(!m_ConnectedControllers[iController]->IsConnected())
+            {
+                delete m_ConnectedControllers[iController];
+                m_ConnectedControllers.erase(m_ConnectedControllers.begin() + iController);
                 m_Connected--;
             }
         }
 
-        usleep(2000);
+        usleep(25);
     }
 }
 
@@ -54,10 +62,9 @@ ControllerHandler::~ControllerHandler()
 {
     printf("Waiting running threads, controllers will be disconnected ...\n");
 
-    for(unsigned int iThread = 0; iThread < m_ThreadList.size(); iThread++)
+    for(unsigned int iController = 0; iController < m_ConnectedControllers.size(); iController++)
     {
-        delete m_ConnectedControllers[iThread];
-        m_ThreadList[iThread]->join();
-        delete m_ThreadList[iThread];
+        delete m_ConnectedControllers[iController];
+        m_ConnectedControllers.erase(m_ConnectedControllers.begin() + iController);
     }
 }

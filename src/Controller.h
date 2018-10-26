@@ -14,6 +14,7 @@ public:
     bool SwitchPlayerLedOn(const uint8_t &ledNumber);
     void DoControllerRoutine();
     inline hid_device* GetHidDevice() const { return m_Device; };
+    inline bool IsConnected() const { return m_Com.IsConnected(); };
     ~Controller();
 private:
     uint8_t m_ControllerPosition;

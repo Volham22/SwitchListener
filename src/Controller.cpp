@@ -310,9 +310,7 @@ void Controller::DoControllerRoutine()
 {
     AnswerReader reader;
 
-    printf("Starting routine dialog ...\n");
-
-    while(m_Com.IsConnected())
+    if(m_Com.IsConnected())
     {
         HIDBuffer reportBuffer = m_Com.ReadOnDevice();
         ButtonsReport report = reader.ReadAnswer(reportBuffer);
@@ -354,8 +352,6 @@ void Controller::DoControllerRoutine()
         PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
         printf("=================================\n");
         #endif
-
-        usleep(50);
     }
 }
 
