@@ -32,7 +32,7 @@ HidIO::HidIO(hid_device* device)
     else
         m_isConnected = false;
 
-    hid_set_nonblocking(m_Device, 1); // Don't block the execution if a controller doesn't respond
+    //hid_set_nonblocking(m_Device, 1);
 }
 
 HIDBuffer HidIO::SetDisconnected()
