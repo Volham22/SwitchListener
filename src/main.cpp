@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "ConnectionsManager.h"
 
 int main()
@@ -8,7 +6,7 @@ int main()
 
     if(res)
     {
-        std::cout << "Failed to initialize HidApi." << std::endl;
+        printf("Failed to initialise HidAPI !\n");
         return EXIT_FAILURE;
     }
 
