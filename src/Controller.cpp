@@ -33,8 +33,11 @@ static void PrintBatteryLevel(const BatteryLevel &level)
     }  
 }
 
-Controller::Controller(hid_device* device)
-: m_ControllerPosition(0), m_Device(nullptr), m_IsInitialized(false), m_Com(HidIO(device))
+SampleController::SampleController(hid_device* device) : m_ControllerPosition(0), m_Device(0), m_IsInitialized(false), m_Com(HidIO(device)) {}
+
+SampleController::~SampleController() {}
+
+Controller::Controller(hid_device* device) : SampleController(device)
 {
     if(device) // Check if device exists
         m_Device = device;

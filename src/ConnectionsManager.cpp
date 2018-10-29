@@ -5,7 +5,8 @@
 #define SCANNING_DELAY 2000 // in ms
 
 ControllerHandler::ControllerHandler()
-: m_Connected(0), m_scanner(ControllerType::Any) {}
+: m_Connected(0), m_scanner(ControllerType::Any), m_MergeJoycons(false),
+  m_WaitingJoycon(false) {}
 
 void ControllerHandler::StartListening()
 {
