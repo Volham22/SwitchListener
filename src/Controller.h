@@ -35,8 +35,6 @@ public:
     bool SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf = true, const bool &accelAAFilter = true);
     bool SwitchPlayerLedOn(const uint8_t &ledNumber);
     void DoControllerRoutine();
-    inline hid_device* GetHidDevice() const { return m_Device; };
-    inline bool IsConnected() const { return m_Com.IsConnected(); };
     ~Controller();
 private:
     bool Disconnect();
