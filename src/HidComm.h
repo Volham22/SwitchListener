@@ -18,6 +18,7 @@ HIDBuffer initBuffer();
 class HidIO
 {
 public:
+    HidIO();
     HidIO(hid_device* device);
     void WriteOnDevice(const HIDBuffer &data);
     HIDBuffer SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID);

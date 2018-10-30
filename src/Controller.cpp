@@ -33,14 +33,12 @@ static void PrintBatteryLevel(const BatteryLevel &level)
     }  
 }
 
-SampleController::SampleController(hid_device* device) : m_ControllerPosition(0), m_Device(0), m_IsInitialized(false), m_Com(HidIO(device)) {}
-
-SampleController::~SampleController() {}
-
-Controller::Controller(hid_device* device) : SampleController(device)
+Controller::Controller(hid_device* device)
 {
     if(device) // Check if device exists
         m_Device = device;
+
+    m_Com = HidIO(device);
 }
 
 bool Controller::DoHandshake(const uint8_t &controllerNumber)
@@ -362,4 +360,50 @@ Controller::~Controller()
 {
     if(m_IsInitialized && m_Com.IsConnected())
         Disconnect();
+}
+
+JoyconController::JoyconController(hid_device* joyconR, hid_device* joyconL)
+: m_JoyconLCom(HidIO(joyconL)), m_JoyConL(nullptr)
+{
+    // TODO:
+}
+
+bool JoyconController::DoHandshake(const uint8_t &controllerNumber)
+{
+    // TODO:
+}
+
+bool JoyconController::SetVibration(bool active)
+{
+    // TODO:
+}
+
+bool JoyconController::EnableIMU(bool active)
+{
+    // TODO:
+}
+
+bool JoyconController::SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf, const bool &accelAAFilter)
+{
+    // TODO:
+}
+
+bool JoyconController::SwitchPlayerLedOn(const uint8_t &ledNumber)
+{
+    // TODO:
+}
+
+bool JoyconController::Disconnect()
+{
+    // TODO:
+}
+
+void JoyconController::DoControllerRoutine()
+{
+    // TODO:
+}
+
+JoyconController::~JoyconController()
+{
+    // TODO:
 }

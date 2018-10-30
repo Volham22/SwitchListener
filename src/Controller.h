@@ -6,22 +6,15 @@
 class SampleController
 {
 public:
-    SampleController(hid_device* device);
     virtual bool DoHandshake(const uint8_t &controllerNumber) = 0;
     virtual bool SetVibration(bool active) = 0;
     virtual bool EnableIMU(bool active) = 0;
     virtual bool SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf = true, const bool &accelAAFilter = true) = 0;
     virtual bool SwitchPlayerLedOn(const uint8_t &ledNumber) = 0;
     virtual void DoControllerRoutine() = 0;
-    inline hid_device* GetHidDevice() const { return m_Device; };
-    inline bool IsConnected() const { return m_Com.IsConnected(); };
-    virtual ~SampleController() = 0;
+    virtual inline hid_device* GetHidDevice() const = 0;
+    virtual inline bool IsConnected() const = 0;
 protected:
-    uint8_t m_ControllerPosition;
-    hid_device* m_Device;
-    bool m_IsInitialized;
-    HidIO m_Com;
-
     virtual bool Disconnect() = 0;
 };
 
@@ -35,8 +28,39 @@ public:
     bool SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf = true, const bool &accelAAFilter = true);
     bool SwitchPlayerLedOn(const uint8_t &ledNumber);
     void DoControllerRoutine();
+    inline hid_device* GetHidDevice() const { return m_Device; };
+    inline bool IsConnected() const { return m_Com.IsConnected(); };
     ~Controller();
 private:
+    uint8_t m_ControllerPosition;
+    hid_device* m_Device;
+    bool m_IsInitialized;
+    HidIO m_Com;
+    bool Disconnect();
+};
+
+class JoyconController : public SampleController
+{
+public:
+    JoyconController(hid_device* joyconR, hid_device* joyconL);
+    bool DoHandshake(const uint8_t &controllerNumber);
+    bool SetVibration(bool active);
+    bool EnableIMU(bool active);
+    bool SetIMUSensitivity(const uint8_t &gyroSensi, const uint8_t &acellsensi, const bool &gyroPerf = true, const bool &accelAAFilter = true);
+    bool SwitchPlayerLedOn(const uint8_t &ledNumber);
+    void DoControllerRoutine();
+    inline hid_device* GetHidDevice() const override { return nullptr; };
+    inline hid_device* GetRJoyconHidDevice() const { return m_Device; };
+    inline hid_device* GetLJoyconHidDevice() const { return m_JoyConL; };
+    inline bool IsConnected() const { return (m_JoyconLCom.IsConnected() && m_Com.IsConnected()); };
+    ~JoyconController();
+private:
+    HidIO m_JoyconLCom;
+    hid_device* m_JoyConL;
+    uint8_t m_ControllerPosition;
+    hid_device* m_Device;
+    bool m_IsInitialized;
+    HidIO m_Com;
     bool Disconnect();
 };
 

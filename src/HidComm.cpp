@@ -24,6 +24,9 @@ HIDBuffer initBuffer()
     return buffer;
 }
 
+HidIO::HidIO()
+: m_Device(nullptr), m_isConnected(false), m_ExchangeCount(0) {}
+
 HidIO::HidIO(hid_device* device)
 : m_Device(nullptr), m_isConnected(true), m_ExchangeCount(0)
 {
