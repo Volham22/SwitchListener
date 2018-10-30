@@ -13,7 +13,8 @@ public:
     virtual bool SwitchPlayerLedOn(const uint8_t &ledNumber) = 0;
     virtual void DoControllerRoutine() = 0;
     virtual inline hid_device* GetHidDevice() const = 0;
-    virtual inline bool IsConnected() const = 0;
+    virtual inline bool IsConnected() const { return false; };
+    virtual ~SampleController() {};
 protected:
     virtual bool Disconnect() = 0;
 };
@@ -29,8 +30,8 @@ public:
     bool SwitchPlayerLedOn(const uint8_t &ledNumber);
     void DoControllerRoutine();
     inline hid_device* GetHidDevice() const { return m_Device; };
-    inline bool IsConnected() const { return m_Com.IsConnected(); };
-    ~Controller();
+    inline bool IsConnected() const override { return m_Com.IsConnected(); };
+    ~Controller() final;
 private:
     uint8_t m_ControllerPosition;
     hid_device* m_Device;
@@ -52,8 +53,8 @@ public:
     inline hid_device* GetHidDevice() const override { return nullptr; };
     inline hid_device* GetRJoyconHidDevice() const { return m_Device; };
     inline hid_device* GetLJoyconHidDevice() const { return m_JoyConL; };
-    inline bool IsConnected() const { return (m_JoyconLCom.IsConnected() && m_Com.IsConnected()); };
-    ~JoyconController();
+    inline bool IsConnected() const override { return (m_JoyconLCom.IsConnected() && m_Com.IsConnected()); };
+    ~JoyconController() final;
 private:
     HidIO m_JoyconLCom;
     hid_device* m_JoyConL;

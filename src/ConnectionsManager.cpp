@@ -4,9 +4,14 @@
 
 #define SCANNING_DELAY 2000 // in ms
 
-ControllerHandler::ControllerHandler()
+inline static bool isJoycon(ControllerType type)
+{
+    return (type == ControllerType::JoyConLeft || type == ControllerType::JoyConRight);
+}
+
+ControllerHandler::ControllerHandler(bool mergeJoycons)
 : m_Connected(0), m_scanner(ControllerType::Any), m_MergeJoycons(false),
-  m_WaitingJoycon(false) {}
+  m_WaitingJoycon(false), m_WaitingJoyconDevice(nullptr), m_WaitingJoyconType(ControllerType::Unknow) {}
 
 void ControllerHandler::StartListening()
 {
@@ -15,23 +20,82 @@ void ControllerHandler::StartListening()
 
     while(true)
     {
+        //printf("%i\n", m_Connected);
         /* Check for new controllers */
         if(m_scanner.ScanForAnyController())
         {
             hid_device* controllerHandler = m_scanner.GetHidDevice();
             Controller* controller = new Controller(controllerHandler);
-            m_Connected++;
 
-            if(controller->DoHandshake(m_Connected))
+            if((!m_WaitingJoycon) && isJoycon(m_scanner.GetControllerType()))
             {
-                printf("New %s found !\n", TypeToString(m_scanner.GetControllerType()));
-                m_ConnectedControllers.push_back(controller);
-            }
-            else
-            {
+                printf("Joycon found waiting a second one\n");
+
+                m_WaitingJoycon = true;
+                m_WaitingJoyconType = m_scanner.GetControllerType();
+                m_WaitingJoyconDevice = controllerHandler;
+
                 delete controller;
-                m_Connected--;
-                printf("Warning: Handshake failed for %s\n", TypeToString(m_scanner.GetControllerType()));
+            }
+            else if(m_WaitingJoycon && isJoycon(m_scanner.GetControllerType())
+                    && m_scanner.GetControllerType() != m_WaitingJoyconType)
+            {
+                printf("Two differents Joycons connected reconized as one controller\n");
+
+                if(m_WaitingJoyconType == ControllerType::JoyConRight)
+                {
+                    m_Connected++;
+
+                    JoyconController* controller = new JoyconController(m_WaitingJoyconDevice, controllerHandler);
+
+                    if(controller->DoHandshake(m_Connected))
+                    {
+                        printf("Merged Joycons connected\n");
+                        m_ConnectedControllers.push_back(controller);
+                    }
+                    else
+                    {
+                        m_Connected--;
+                        delete controller;
+                        printf("Warning: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
+                    }
+                }
+                else
+                {
+                    JoyconController* controller = new JoyconController(controllerHandler, m_WaitingJoyconDevice);
+                    
+                    m_Connected++;
+
+                    if(controller->DoHandshake(m_Connected))
+                    {
+                        printf("Merged Joycons connected\n");
+                        m_ConnectedControllers.push_back(controller);
+                    }
+                    else
+                    {
+                        m_Connected--;
+                        delete controller;
+                        printf("Warning: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
+                    }
+                }
+            }
+                        
+            if(!isJoycon(m_scanner.GetControllerType()) || m_MergeJoycons)
+            {
+                m_Connected++;
+
+                if(controller->DoHandshake(m_Connected))
+                {
+                    printf("New %s found !\n", TypeToString(m_scanner.GetControllerType()));
+                    m_ConnectedControllers.push_back(controller);
+                   
+                }
+                else
+                {
+                    delete controller;
+                    m_Connected--;
+                    printf("Warning: Handshake failed for %s\n", TypeToString(m_scanner.GetControllerType()));
+                }
             }
         }
 

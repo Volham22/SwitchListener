@@ -10,7 +10,7 @@ int main()
         return EXIT_FAILURE;
     }
 
-    ControllerHandler handler;
+    ControllerHandler handler(true);
     handler.StartListening();
 
     return EXIT_SUCCESS;
