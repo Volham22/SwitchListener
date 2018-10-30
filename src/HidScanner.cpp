@@ -94,16 +94,21 @@ bool HidScanner::ScanForAnyController()
             switch(devIter->product_id)
             {
                 case JOYCON_L_ID:
+                    m_Type = ControllerType::JoyConLeft;
                     if(InitController(devIter))
                         return true;
                 
                 case JOYCON_R_ID:
+                    m_Type = ControllerType::JoyConRight;
                     if(InitController(devIter))
                         return true;
 
                 case PRO_CONTROLLER_ID:
+                    m_Type = ControllerType::ProController;
                     if(InitController(devIter))
                         return true;
+                default:
+                    m_Type = ControllerType::Unknow;
             }
         }
                 
