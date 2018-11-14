@@ -10,7 +10,7 @@ inline static bool isJoycon(ControllerType type)
 }
 
 ControllerHandler::ControllerHandler(bool mergeJoycons)
-: m_Connected(0), m_scanner(ControllerType::Any), m_MergeJoycons(false),
+: m_Connected(0), m_scanner(ControllerType::Any), m_MergeJoycons(mergeJoycons),
   m_WaitingJoycon(false), m_WaitingJoyconDevice(nullptr), m_WaitingJoyconType(ControllerType::Unknow) {}
 
 void ControllerHandler::StartListening()
@@ -20,14 +20,13 @@ void ControllerHandler::StartListening()
 
     while(true)
     {
-        //printf("%i\n", m_Connected);
         /* Check for new controllers */
         if(m_scanner.ScanForAnyController())
         {
             hid_device* controllerHandler = m_scanner.GetHidDevice();
             Controller* controller = new Controller(controllerHandler);
 
-            if((!m_WaitingJoycon) && isJoycon(m_scanner.GetControllerType()))
+            if((!m_WaitingJoycon) && isJoycon(m_scanner.GetControllerType()) && m_MergeJoycons)
             {
                 printf("Joycon found waiting a second one\n");
 
@@ -38,7 +37,7 @@ void ControllerHandler::StartListening()
                 delete controller;
             }
             else if(m_WaitingJoycon && isJoycon(m_scanner.GetControllerType())
-                    && m_scanner.GetControllerType() != m_WaitingJoyconType)
+                    && m_scanner.GetControllerType() != m_WaitingJoyconType && m_MergeJoycons)
             {
                 printf("Two differents Joycons connected reconized as one controller\n");
 
@@ -80,7 +79,7 @@ void ControllerHandler::StartListening()
                 }
             }
                         
-            if(!isJoycon(m_scanner.GetControllerType()) || m_MergeJoycons)
+            if(!isJoycon(m_scanner.GetControllerType()) || (!m_MergeJoycons))
             {
                 m_Connected++;
 
