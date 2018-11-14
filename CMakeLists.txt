@@ -4,6 +4,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -pthread")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O2 -Wall")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Wall -DDEBUG")
 
+if(DEBUG_VERBOSE)
+    add_definitions(-DDEBUG_VERBOSE)
+endif()
+
 # SwitchListener Project
 project(SwitchListener)
 

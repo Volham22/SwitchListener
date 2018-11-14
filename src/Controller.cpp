@@ -317,41 +317,44 @@ void Controller::DoControllerRoutine()
         ButtonsReport report = reader.ReadAnswer(reportBuffer);
         
         #ifdef DEBUG
-        // Print result in console for test purpose
-        printf("======Button Report for Controller %i ======\n", m_ControllerPosition);
-        printf("Button Y: %i\n", report.ButtonsStates[0] ? 1 : 0);
-        printf("Button X: %i\n", report.ButtonsStates[1] ? 1 : 0);
-        printf("Button B: %i\n", report.ButtonsStates[2] ? 1 : 0);
-        printf("Button A: %i\n", report.ButtonsStates[3] ? 1 : 0);
-        printf("Button SR: %i\n", report.ButtonsStates[4] ? 1 : 0);
-        printf("Button SL: %i\n", report.ButtonsStates[5] ? 1 : 0);
-        printf("Button R: %i\n", report.ButtonsStates[6] ? 1 : 0);
-        printf("Button ZR: %i\n", report.ButtonsStates[7] ? 1 : 0);
-        printf("Button Minus: %i\n", report.ButtonsStates[8] ? 1 : 0);
-        printf("Button Plus: %i\n", report.ButtonsStates[9] ? 1 : 0);
-        printf("Button RStick: %i\n", report.ButtonsStates[10] ? 1 : 0);
-        printf("Button LStick: %i\n", report.ButtonsStates[11] ? 1 : 0);
-        printf("Button Home: %i\n", report.ButtonsStates[12] ? 1 : 0);
-        printf("Button Capture: %i\n", report.ButtonsStates[13] ? 1 : 0);
-        printf("Button Down: %i\n", report.ButtonsStates[14] ? 1 : 0);
-        printf("Button Up: %i\n", report.ButtonsStates[15] ? 1 : 0);
-        printf("Button Right: %i\n", report.ButtonsStates[16] ? 1 : 0);
-        printf("Button Left: %i\n", report.ButtonsStates[17] ? 1 : 0);
-        printf("Button L: %i\n", report.ButtonsStates[20] ? 1 : 0);
-        printf("Button ZL: %i\n", report.ButtonsStates[21] ? 1 : 0);
-        printf("Right Stick y: %i\n", report.StickRight.Vertical);
-        printf("Right Stick x: %i\n", report.StickRight.Horizontal);
-        printf("Left Stick y: %i\n", report.StickLeft.Vertical);
-        printf("Left Stick x: %i\n", report.StickLeft.Horizontal);
-        printf("Accelerometer x: %i\n", report.Sensors.AccelX);
-        printf("Accelerometer y: %i\n", report.Sensors.AccelY);
-        printf("Accelerometer z: %i\n", report.Sensors.AccelZ);
-        
-        for(int i = 0; i<3; i++)
-            printf("Gyroscope%i: %i\n", i, report.Sensors.GyroData[i]);
+        if(isButtonsPressed(report))
+        {
+            // Print result in console for test purpose
+            printf("======Button Report for Controller %i ======\n", m_ControllerPosition);
+            printf("Button Y: %i\n", report.ButtonsStates[0] ? 1 : 0);
+            printf("Button X: %i\n", report.ButtonsStates[1] ? 1 : 0);
+            printf("Button B: %i\n", report.ButtonsStates[2] ? 1 : 0);
+            printf("Button A: %i\n", report.ButtonsStates[3] ? 1 : 0);
+            printf("Button SR: %i\n", report.ButtonsStates[4] ? 1 : 0);
+            printf("Button SL: %i\n", report.ButtonsStates[5] ? 1 : 0);
+            printf("Button R: %i\n", report.ButtonsStates[6] ? 1 : 0);
+            printf("Button ZR: %i\n", report.ButtonsStates[7] ? 1 : 0);
+            printf("Button Minus: %i\n", report.ButtonsStates[8] ? 1 : 0);
+            printf("Button Plus: %i\n", report.ButtonsStates[9] ? 1 : 0);
+            printf("Button RStick: %i\n", report.ButtonsStates[10] ? 1 : 0);
+            printf("Button LStick: %i\n", report.ButtonsStates[11] ? 1 : 0);
+            printf("Button Home: %i\n", report.ButtonsStates[12] ? 1 : 0);
+            printf("Button Capture: %i\n", report.ButtonsStates[13] ? 1 : 0);
+            printf("Button Down: %i\n", report.ButtonsStates[14] ? 1 : 0);
+            printf("Button Up: %i\n", report.ButtonsStates[15] ? 1 : 0);
+            printf("Button Right: %i\n", report.ButtonsStates[16] ? 1 : 0);
+            printf("Button Left: %i\n", report.ButtonsStates[17] ? 1 : 0);
+            printf("Button L: %i\n", report.ButtonsStates[20] ? 1 : 0);
+            printf("Button ZL: %i\n", report.ButtonsStates[21] ? 1 : 0);
+            printf("Right Stick y: %i\n", report.StickRight.Vertical);
+            printf("Right Stick x: %i\n", report.StickRight.Horizontal);
+            printf("Left Stick y: %i\n", report.StickLeft.Vertical);
+            printf("Left Stick x: %i\n", report.StickLeft.Horizontal);
+            printf("Accelerometer x: %i\n", report.Sensors.AccelX);
+            printf("Accelerometer y: %i\n", report.Sensors.AccelY);
+            printf("Accelerometer z: %i\n", report.Sensors.AccelZ);
+            
+            for(int i = 0; i<3; i++)
+                printf("Gyroscope%i: %i\n", i, report.Sensors.GyroData[i]);
 
-        PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
-        printf("=================================\n");
+            PrintBatteryLevel((BatteryLevel)report.ControllerBattery);
+            printf("=================================\n");
+        }
         #endif
     }
 }

@@ -11,6 +11,17 @@ static void PrintBytes(const uchar &byte)
 }
 #endif
 
+bool isButtonsPressed(const ButtonsReport &report)
+{
+    for(int i = 0; i<22; i++)
+    {
+        if(report.ButtonsStates[i])
+            return true;
+    }
+
+    return false;
+}
+
 AnswerReader::AnswerReader() {}
 
 ButtonsReport AnswerReader::ReadAnswer(const HIDBuffer &reply) const

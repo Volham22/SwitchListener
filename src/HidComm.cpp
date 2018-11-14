@@ -4,8 +4,8 @@
 #include <cstring>
 #include <unistd.h>
 
-#ifdef DEBUG
-static void PrintData(const HIDBuffer &data)
+#ifdef DEBUG_VERBOSE
+static void printData(const HIDBuffer &data)
 {
     for(int i = 0; i<data.BufferSize; i++)
         printf("%02x ", data.Buffer[i]);
@@ -66,15 +66,15 @@ HIDBuffer HidIO::ReadOnDevice()
         {
             data.BufferSize = 24;
             
-            #ifdef DEBUG
+            #ifdef DEBUG_VERBOSE
             printf("Receive:\n");
-            PrintData(data);
+            printData(data);
             #endif
             return data;
         }
         else
         {
-            #ifdef DEBUG
+            #ifdef DEBUG_VERBOSE
             printf("Failed to read on device\n");
             #endif
             return SetDisconnected(); // If reading failed return HIDBuffer initialized with 0
@@ -88,9 +88,9 @@ HIDBuffer HidIO::ReadOnDevice()
 
 HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
 {
-    #ifdef DEBUG
+    #ifdef DEBUG_VERBOSE
     printf("Send:\n");
-    PrintData(buffer);
+    printData(buffer);
     #endif
     
     hid_write(m_Device, buffer.Buffer, buffer.BufferSize);
@@ -99,15 +99,15 @@ HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
 
     if(res > 0)
     {
-        #ifdef DEBUG
+        #ifdef DEBUG_VERBOSE
         printf("Receive:\n");
-        PrintData(buffer);
+        printData(buffer);
         #endif
         return buffer; // Return data sent by the controller
     }
     else
     {
-        #ifdef DEBUG
+        #ifdef DEBUG_VERBOSE
         printf("The controller returned nothing.\n");
         #endif
         return { 0, 0 }; // Return null
@@ -128,9 +128,6 @@ HIDBuffer HidIO::SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID)
     memcpy(buffer.Buffer, buf, INPUT_BUFFER_SIZE);
 
     return ExchangeOnDevice(buffer);
-    
-    /*if(commandBuffer.Buffer)
-        memcpy(commandBuffer.Buffer, buf, 0x40);*/
 }
 
 HIDBuffer HidIO::SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID)
@@ -150,7 +147,4 @@ HIDBuffer HidIO::SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t command
     memcpy(send.Buffer, buf, INPUT_BUFFER_SIZE);
         
     return SendCommandToDevice(send, commandID);
-        
-    /*if(commandBuffer.Buffer)
-        memcpy(commandBuffer.Buffer, buf, 0x40);*/
 }
