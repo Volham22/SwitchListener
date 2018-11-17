@@ -18,7 +18,9 @@ int main(int argc, char* argv[])
     {
         if(!strcmp("merge", argv[i]))
         {
+            #ifdef DEBUG_VERBOSE
             printf("Merging joycons mode\n");
+            #endif
             mergingMode = true;
             break;
         }
@@ -26,5 +28,6 @@ int main(int argc, char* argv[])
     ControllerHandler handler(mergingMode);
     handler.StartListening();
 
+    hid_exit();
     return EXIT_SUCCESS;
 }
