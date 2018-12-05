@@ -10,11 +10,13 @@
 #define NINTENDO_VENDORID (0x057E)
 #define BT_SERIAL_NUMBER L"000000000001"
 
-enum ControllerType { ProController = PRO_CONTROLLER_ID,
-                      JoyConRight   = JOYCON_R_ID,
-                      JoyConLeft    = JOYCON_L_ID,
-                      Any           = 1,
-                      Unknow        = 0 };
+enum ControllerType {
+    ProController = PRO_CONTROLLER_ID,
+    JoyConRight   = JOYCON_R_ID,
+    JoyConLeft    = JOYCON_L_ID,
+    Any           = 1,
+    Unknow        = 0
+};
 
 const char* TypeToString(const unsigned short &type);
 
