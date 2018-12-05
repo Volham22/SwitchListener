@@ -12,6 +12,7 @@ endif()
 project(SwitchListener)
 
 set(SRC
+    src/Interface.cpp
     src/AnswerReader.cpp
     src/Controller.cpp
     src/HidComm.cpp
@@ -20,6 +21,7 @@ set(SRC
     src/main.cpp)
 
 set(HEADERS
+    src/Interface.h
     src/AnswerReader.h
     src/Controller.h
     src/HidComm.h
