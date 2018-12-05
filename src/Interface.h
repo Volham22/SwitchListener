@@ -16,7 +16,7 @@ enum InterfaceStatus {
     UINPUT_ERROR,
     INTERFACE_INIT_SUCCESS,
     INTERFACE_INIT_FAILURE,
-    UNKNOW
+    UNKNOWN
 };
 
 

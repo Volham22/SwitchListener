@@ -5,7 +5,7 @@
 #include <libudev.h>
 
 InterfaceManager::InterfaceManager(const char* deviceName)
-: m_Status(InterfaceStatus::UNKNOW)
+: m_Status(InterfaceStatus::UNKNOWN)
 {
     // TODO: Initilisation
 }
