@@ -38,4 +38,12 @@ else()
     message(FATAL_ERROR "hidapi not found !")
 endif()
 
+find_package(udev)
+if(UDEV_FOUND)
+    target_include_directories(SwitchListener PUBLIC ${UDEV_INCLUDE_DIR})
+    target_link_libraries(SwitchListener ${UDEV_LIBRARY})
+else()
+    message(FATAL_ERROR "udev not found !")
+endif()
+
 add_subdirectory(tools)
