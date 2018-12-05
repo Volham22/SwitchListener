@@ -657,42 +657,45 @@ void JoyconController::DoControllerRoutine()
         ButtonsReport LReport = reader.ReadAnswer(LReportBuffer);
         
         #ifdef DEBUG
-        // Print result in console for test purpose
-        printf("======Button Report for Controller %i ======\n", m_ControllerPosition);
-        printf("Button Y: %i\n", RReport.ButtonsStates[0] ? 1 : 0);
-        printf("Button X: %i\n", RReport.ButtonsStates[1] ? 1 : 0);
-        printf("Button B: %i\n", RReport.ButtonsStates[2] ? 1 : 0);
-        printf("Button A: %i\n", RReport.ButtonsStates[3] ? 1 : 0);
-        printf("Button R: %i\n", RReport.ButtonsStates[6] ? 1 : 0);
-        printf("Button ZR: %i\n", RReport.ButtonsStates[7] ? 1 : 0);
-        printf("Button Minus: %i\n", LReport.ButtonsStates[8] ? 1 : 0);
-        printf("Button Plus: %i\n", RReport.ButtonsStates[9] ? 1 : 0);
-        printf("Button RStick: %i\n", RReport.ButtonsStates[10] ? 1 : 0);
-        printf("Button LStick: %i\n", LReport.ButtonsStates[11] ? 1 : 0);
-        printf("Button Home: %i\n", RReport.ButtonsStates[12] ? 1 : 0);
-        printf("Button Capture: %i\n", LReport.ButtonsStates[13] ? 1 : 0);
-        printf("Button Down: %i\n", LReport.ButtonsStates[14] ? 1 : 0);
-        printf("Button Up: %i\n", LReport.ButtonsStates[15] ? 1 : 0);
-        printf("Button Right: %i\n", LReport.ButtonsStates[16] ? 1 : 0);
-        printf("Button Left: %i\n", LReport.ButtonsStates[17] ? 1 : 0);
-        printf("Button L: %i\n", LReport.ButtonsStates[20] ? 1 : 0);
-        printf("Button ZL: %i\n", LReport.ButtonsStates[21] ? 1 : 0);
-        printf("Right Stick y: %i\n", RReport.StickRight.Vertical);
-        printf("Right Stick x: %i\n", RReport.StickRight.Horizontal);
-        printf("Left Stick y: %i\n", LReport.StickLeft.Vertical);
-        printf("Left Stick x: %i\n", LReport.StickLeft.Horizontal);
-        printf("Accelerometer x: %i\n", RReport.Sensors.AccelX);
-        printf("Accelerometer y: %i\n", RReport.Sensors.AccelY);
-        printf("Accelerometer z: %i\n", RReport.Sensors.AccelZ);
-        
-        for(int i = 0; i<3; i++)
-            printf("Gyroscope%i: %i\n", i, RReport.Sensors.GyroData[i]);
+        if(isButtonsPressed(RReport) || isButtonsPressed(LReport))
+        {
+            // Print result in console for test purpose
+            printf("======Button Report for Controller %i ======\n", m_ControllerPosition);
+            printf("Button Y: %i\n", RReport.ButtonsStates[0] ? 1 : 0);
+            printf("Button X: %i\n", RReport.ButtonsStates[1] ? 1 : 0);
+            printf("Button B: %i\n", RReport.ButtonsStates[2] ? 1 : 0);
+            printf("Button A: %i\n", RReport.ButtonsStates[3] ? 1 : 0);
+            printf("Button R: %i\n", RReport.ButtonsStates[6] ? 1 : 0);
+            printf("Button ZR: %i\n", RReport.ButtonsStates[7] ? 1 : 0);
+            printf("Button Minus: %i\n", LReport.ButtonsStates[8] ? 1 : 0);
+            printf("Button Plus: %i\n", RReport.ButtonsStates[9] ? 1 : 0);
+            printf("Button RStick: %i\n", RReport.ButtonsStates[10] ? 1 : 0);
+            printf("Button LStick: %i\n", LReport.ButtonsStates[11] ? 1 : 0);
+            printf("Button Home: %i\n", RReport.ButtonsStates[12] ? 1 : 0);
+            printf("Button Capture: %i\n", LReport.ButtonsStates[13] ? 1 : 0);
+            printf("Button Down: %i\n", LReport.ButtonsStates[14] ? 1 : 0);
+            printf("Button Up: %i\n", LReport.ButtonsStates[15] ? 1 : 0);
+            printf("Button Right: %i\n", LReport.ButtonsStates[16] ? 1 : 0);
+            printf("Button Left: %i\n", LReport.ButtonsStates[17] ? 1 : 0);
+            printf("Button L: %i\n", LReport.ButtonsStates[20] ? 1 : 0);
+            printf("Button ZL: %i\n", LReport.ButtonsStates[21] ? 1 : 0);
+            printf("Right Stick y: %i\n", RReport.StickRight.Vertical);
+            printf("Right Stick x: %i\n", RReport.StickRight.Horizontal);
+            printf("Left Stick y: %i\n", LReport.StickLeft.Vertical);
+            printf("Left Stick x: %i\n", LReport.StickLeft.Horizontal);
+            printf("Accelerometer x: %i\n", RReport.Sensors.AccelX);
+            printf("Accelerometer y: %i\n", RReport.Sensors.AccelY);
+            printf("Accelerometer z: %i\n", RReport.Sensors.AccelZ);
+            
+            for(int i = 0; i<3; i++)
+                printf("Gyroscope%i: %i\n", i, RReport.Sensors.GyroData[i]);
 
-        printf("Right Joycon:");
-        PrintBatteryLevel((BatteryLevel)RReport.ControllerBattery);
-        printf("Left Joycon:");
-        PrintBatteryLevel((BatteryLevel)LReport.ControllerBattery);
-        printf("=================================\n");
+            printf("Right Joycon:");
+            PrintBatteryLevel((BatteryLevel)RReport.ControllerBattery);
+            printf("Left Joycon:");
+            PrintBatteryLevel((BatteryLevel)LReport.ControllerBattery);
+            printf("=================================\n");
+        }
         #endif
     }
 }
