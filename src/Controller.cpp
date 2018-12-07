@@ -451,23 +451,29 @@ bool JoyconController::DoHandshake(const uint8_t &controllerNumber)
         return false;
     }
 
-    #warning TODO: Battery level for joycons controller 
     if(m_Com.IsConnected())
     {
         AnswerReader reader;
-        HIDBuffer buff;
-        BatteryLevel level;
+        HIDBuffer rBuffer;
+        HIDBuffer lBuffer;
+        BatteryLevel rLevel;
+        BatteryLevel lLevel;
 
         for(int i = 0; i<5; i++) // 5 retry for reading battery level
         {
-            buff = m_Com.ReadOnDevice();
-            level = reader.ReadBatteryLevel(buff);
+            rBuffer = m_Com.ReadOnDevice();
+            lBuffer = m_JoyconLCom.ReadOnDevice();
+            rLevel = reader.ReadBatteryLevel(rBuffer);
+            lLevel = reader.ReadBatteryLevel(lBuffer);
 
-            if(level != BatteryLevel::Unknow)
+            if(rLevel != BatteryLevel::Unknow && lLevel != BatteryLevel::Unknow)
                 break;
         } 
 
-        PrintBatteryLevel(level);
+        if((int8_t)rLevel < (int8_t)lLevel)
+            PrintBatteryLevel(rLevel);
+        else
+            PrintBatteryLevel(lLevel);
     }
     else
     {
