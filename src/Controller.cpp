@@ -317,13 +317,7 @@ void Controller::DoControllerRoutine()
         ButtonsReport report = reader.ReadAnswer(reportBuffer);
         
         if(m_Interface.GetInterfaceStatus() == InterfaceStatus::INTERFACE_INIT_SUCCESS)
-        {
-            #ifdef DEBUG
-            printf("Registering Event\n");
-            #endif
-
             m_Interface.CreateEvent(report);
-        }
         
         #ifdef DEBUG
         if(isButtonsPressed(report))
