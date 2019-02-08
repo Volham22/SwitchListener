@@ -1,6 +1,10 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+#include <linux/input.h>
+#include <linux/uinput.h>
+#include <libudev.h>
+
 #include "AnswerReader.h"
 
 #define DEVICENAME_JOYCON_SIZE           18
@@ -29,6 +33,10 @@ public:
 
 private:
     InterfaceStatus m_Status;
+    udev *m_uDev;
+    udev_device *m_uInput;
+    uinput_user_dev m_uDevice;
+    int m_fd;
 };
 
 #endif
