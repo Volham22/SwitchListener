@@ -91,7 +91,7 @@ BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
                 #ifdef DEBUG
                 PrintBytes(batteryInfo);
                 #endif
-                return BatteryLevel::Unknow;
+                return BatteryLevel::Unknown;
         }
     }
     else
@@ -100,7 +100,7 @@ BatteryLevel AnswerReader::ReadBatteryLevel(const HIDBuffer &reply) const
         printf("Battery:\n  ");
         PrintBytes(reply.Buffer[2] >> 4);
         #endif
-        return BatteryLevel::Unknow;
+        return BatteryLevel::Unknown;
     }
 }
 

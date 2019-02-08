@@ -27,15 +27,15 @@ static void PrintBatteryLevel(const BatteryLevel &level)
             printf("Battery: Critical\n");
             break;
 
-        case BatteryLevel::Unknow:
-            printf("Battery: Unknow or empty\n");
+        case BatteryLevel::Unknown:
+            printf("Battery: Unknownn or empty\n");
             break;
     }  
 }
 
 Controller::Controller(hid_device* device)
 : m_ControllerPosition(0), m_Device(nullptr), m_IsInitialized(false),
-  m_Com(HidIO(device))
+  m_Com(HidIO(device)), m_Interface(InterfaceManager(PRO_CONTROLLER_DEVICENAME))
 {
     if(device) // Check if device exists
         m_Device = device;
@@ -131,7 +131,7 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
             buff = m_Com.ReadOnDevice();
             level = reader.ReadBatteryLevel(buff);
 
-            if(level != BatteryLevel::Unknow)
+            if(level != BatteryLevel::Unknown)
                 break;
         } 
 
@@ -316,6 +316,15 @@ void Controller::DoControllerRoutine()
         HIDBuffer reportBuffer = m_Com.ReadOnDevice();
         ButtonsReport report = reader.ReadAnswer(reportBuffer);
         
+        if(m_Interface.GetInterfaceStatus() == InterfaceStatus::INTERFACE_INIT_SUCCESS)
+        {
+            #ifdef DEBUG
+            printf("Registering Event\n");
+            #endif
+
+            m_Interface.CreateEvent(report);
+        }
+        
         #ifdef DEBUG
         if(isButtonsPressed(report))
         {
@@ -466,7 +475,7 @@ bool JoyconController::DoHandshake(const uint8_t &controllerNumber)
             rLevel = reader.ReadBatteryLevel(rBuffer);
             lLevel = reader.ReadBatteryLevel(lBuffer);
 
-            if(rLevel != BatteryLevel::Unknow && lLevel != BatteryLevel::Unknow)
+            if(rLevel != BatteryLevel::Unknown && lLevel != BatteryLevel::Unknown)
                 break;
         } 
 

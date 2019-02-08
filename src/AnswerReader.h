@@ -53,7 +53,7 @@ struct ButtonsReport // Contain all buttons states
 };
 
 
-enum BatteryLevel { Unknow = -1, Critical = 0, Low = 1, Medium = 2, High = 3 };
+enum BatteryLevel { Unknown = -1, Critical = 0, Low = 1, Medium = 2, High = 3 };
 
 bool isButtonsPressed(const ButtonsReport &report);
 
