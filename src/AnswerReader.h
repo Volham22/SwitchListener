@@ -26,14 +26,12 @@ enum Buttons {
      ZL = 21
 };
 
-struct StickReport
-{
+struct StickReport {
     uint16_t Horizontal;
     uint16_t Vertical;
 };
 
-struct SensorsReport
-{
+struct SensorsReport {
     uint16_t AccelX;
     uint16_t AccelY;
     uint16_t AccelZ;
@@ -41,8 +39,7 @@ struct SensorsReport
     uint16_t GyroData[3];
 };
 
-struct ButtonsReport // Contain all buttons states
-{
+struct ButtonsReport { // Contain all buttons states
     bool ButtonsStates[22];
     int ControllerBattery;
 
@@ -51,7 +48,6 @@ struct ButtonsReport // Contain all buttons states
 
     SensorsReport Sensors;
 };
-
 
 enum BatteryLevel { Unknown = -1, Critical = 0, Low = 1, Medium = 2, High = 3 };
 

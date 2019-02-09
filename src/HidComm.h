@@ -7,8 +7,7 @@
 #define INPUT_BUFFER_SIZE (0x400)
 typedef unsigned char uchar;
 
-struct HIDBuffer
-{
+struct HIDBuffer {
     int BufferSize;
     uchar Buffer[INPUT_BUFFER_SIZE];
 };
