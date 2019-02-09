@@ -112,6 +112,7 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
     if(m_Com.IsConnected())
     {
         SwitchPlayerLedOn(controllerNumber);
+        usleep(50);
         m_ControllerPosition = controllerNumber;
     }
     else
@@ -135,7 +136,8 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
                 break;
         } 
 
-        PrintBatteryLevel(level);      
+        PrintBatteryLevel(level);
+        usleep(50);  
     }
     else
     {
@@ -143,6 +145,18 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
         return false;
     }
 
+    // Enable Home led
+    if(m_Com.IsConnected())
+    {
+        SetHomeLed(true, 10);
+        usleep(50);
+    }
+    else
+    {
+        printf("=======End of Handshake=======\n");
+        return false;
+    }
+    
     printf("=======End of Handshake=======\n\n");
 
     if(!m_Com.IsConnected())
@@ -283,6 +297,39 @@ bool Controller::SwitchPlayerLedOn(const uint8_t &ledNumber)
     else
     {
         printf("Communication with Controller failed.\n Is the Controller connected?\n");
+        return false;
+    }
+}
+
+bool Controller::SetHomeLed(bool active, uint8_t intensity)
+{
+    /*
+     * Intensity value must be between 0 and 15 because the 4 high bits
+     * are used to control the intensity
+     */
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 25;
+
+        buffer.Buffer[0] = active ? 0x1 : 0x0;
+
+        if(intensity > 15)
+        {
+            printf("Warning: Intensity must be between 0 and 15 !\n");
+            return false;
+        }
+
+        buffer.Buffer[1] = (intensity << 4) | 0x0;
+
+        m_Com.SendSubCommandToDevice(buffer, 0x1, 0x38);
+        printf("Switch Home led %s\n", active ? "on" : "off");
+
+        return true;
+    }
+    else
+    {
+        printf("Device already disconnected\n");
         return false;
     }
 }
@@ -615,6 +662,39 @@ bool JoyconController::SwitchPlayerLedOn(const uint8_t &ledNumber)
     else
     {
         printf("Communication with on of the Joycon failed.\n Is the both joycons connected?\n");
+        return false;
+    }
+}
+
+bool JoyconController::SetHomeLed(bool active, uint8_t intensity)
+{
+    /*
+     * Intensity value must be between 0 and 15 because the 4 high bits
+     * are used to control the intensity
+     */
+    if (m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 25;
+
+        buffer.Buffer[0] = active ? 0x1 : 0x0;
+
+        if (intensity > 15)
+        {
+            printf("Warning: Intensity must be between 0 and 15 !\n");
+            return false;
+        }
+
+        buffer.Buffer[1] = (intensity << 4) | 0x0;
+
+        m_Com.SendSubCommandToDevice(buffer, 0x1, 0x38);
+        printf("Switch Home led %s\n", active ? "on" : "off");
+
+        return true;
+    }
+    else
+    {
+        printf("Device already disconnected\n");
         return false;
     }
 }
