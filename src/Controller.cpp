@@ -149,7 +149,6 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
     if(m_Com.IsConnected())
     {
         SetHomeLed(true, 10);
-        //SetHomeLedFade(true, 10, 5, 10);
         usleep(50);
     }
     else
@@ -170,6 +169,8 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
         m_IsInitialized = true;
         return true;
     }
+
+    m_Com.SetNonblocking(true);
 }
 
 bool Controller::SetVibration(bool active)
@@ -391,7 +392,7 @@ bool Controller::Disconnect()
     }
 }
 
-void Controller::DoControllerRoutine()
+bool Controller::DoControllerRoutine()
 {
     AnswerReader reader;
 
@@ -443,6 +444,16 @@ void Controller::DoControllerRoutine()
             printf("=================================\n");
         }
         #endif
+
+        return true;
+    }
+    else
+    {
+        #ifdef DEBUG
+        printf("Controller %d is disconnected !\n", m_ControllerPosition);
+        #endif
+
+        return false;
     }
 }
 
@@ -805,7 +816,7 @@ bool JoyconController::Disconnect()
     }
 }
 
-void JoyconController::DoControllerRoutine()
+bool JoyconController::DoControllerRoutine()
 {
     AnswerReader reader;
 

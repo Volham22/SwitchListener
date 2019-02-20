@@ -14,7 +14,7 @@ public:
     virtual bool SwitchPlayerLedOn(const uint8_t &ledNumber) = 0;
     virtual bool SetHomeLed(bool active, uint8_t intensity = 15) = 0;
     virtual bool SetHomeLedFade(bool active, uint8_t multiplier, uint8_t cycleDuration, uint8_t intensity = 15) = 0;
-    virtual void DoControllerRoutine() = 0;
+    virtual bool DoControllerRoutine() = 0;
     virtual inline hid_device* GetHidDevice() const = 0;
     virtual inline bool IsConnected() const { return false; };
     virtual ~SampleController() {};
@@ -33,7 +33,7 @@ public:
     bool SwitchPlayerLedOn(const uint8_t &ledNumber);
     bool SetHomeLed(bool active, uint8_t intensity = 15);
     bool SetHomeLedFade(bool active, uint8_t multiplier, uint8_t cycleDuration, uint8_t intensity = 15);
-    void DoControllerRoutine();
+    bool DoControllerRoutine();
     inline hid_device* GetHidDevice() const { return m_Device; };
     inline bool IsConnected() const override { return m_Com.IsConnected(); };
     ~Controller() final;
@@ -57,7 +57,7 @@ public:
     bool SwitchPlayerLedOn(const uint8_t &ledNumber);
     bool SetHomeLed(bool active, uint8_t intensity = 255);
     bool SetHomeLedFade(bool active, uint8_t multiplier, uint8_t cycleDuration, uint8_t intensity = 15);
-    void DoControllerRoutine();
+    bool DoControllerRoutine();
     inline hid_device* GetHidDevice() const override { return nullptr; };
     inline hid_device* GetRJoyconHidDevice() const { return m_Device; };
     inline hid_device* GetLJoyconHidDevice() const { return m_JoyConL; };
