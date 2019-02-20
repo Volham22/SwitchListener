@@ -870,7 +870,15 @@ bool JoyconController::DoControllerRoutine()
             printf("=================================\n");
         }
         #endif
+
+        return true;
     }
+    else
+    {
+        printf("A joycon is disconnected !\n");
+        return false;
+    }
+    
 }
 
 JoyconController::~JoyconController()
