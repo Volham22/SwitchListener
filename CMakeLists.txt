@@ -8,7 +8,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -Wall -DDEBUG -DDEBUG_VERBOSE")
 project(SwitchListener)
 
 set(SRC
-    src/Interface.cpp
     src/AnswerReader.cpp
     src/Controller.cpp
     src/HidComm.cpp
@@ -17,29 +16,24 @@ set(SRC
     src/main.cpp)
 
 set(HEADERS
-    src/Interface.h
     src/AnswerReader.h
     src/Controller.h
     src/HidComm.h
     src/HidScanner.h
     src/ConnectionsManager.h)
 
+add_subdirectory(libs/)
+
 add_executable(SwitchListener ${SRC} ${HEADERS})
+target_link_libraries(SwitchListener hidapi)
 
-find_package(HIDAPI)
-if(HIDAPI_FOUND)
-    target_include_directories(SwitchListener PUBLIC ${HIDAPI_INCLUDE_DIR})
-    target_link_libraries(SwitchListener ${HIDAPI_LIBRARY})
-else()
-    message(FATAL_ERROR "hidapi not found !")
-endif()
 
-find_package(udev)
-if(UDEV_FOUND)
-    target_include_directories(SwitchListener PUBLIC ${UDEV_INCLUDE_DIR})
-    target_link_libraries(SwitchListener ${UDEV_LIBRARY})
-else()
-    message(FATAL_ERROR "udev not found !")
-endif()
+#find_package(udev)
+#if(UDEV_FOUND)
+#    target_include_directories(SwitchListener PUBLIC ${UDEV_INCLUDE_DIR})
+#    target_link_libraries(SwitchListener ${UDEV_LIBRARY})
+#else()
+#    message(FATAL_ERROR "udev not found !")
+#endif()
 
 add_subdirectory(tools)

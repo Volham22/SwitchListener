@@ -1,6 +1,12 @@
 #include "ConnectionsManager.h"
 
+#ifdef _WIN32
+#include <Windows.h>
+#define SLEEP(x) Sleep(x)
+#else
 #include <unistd.h>
+#define SLEEP(x) usleep(x)
+#endif
 
 #define SCANNING_DELAY 2000 // in ms
 
@@ -16,7 +22,11 @@ ControllerHandler::ControllerHandler(bool mergeJoycons)
 void ControllerHandler::StartListening()
 {
     /* Creating Listening Thread */
+    #ifdef _WIN32
+    mingw_stdthread::thread listeningThread(&ControllerHandler::ListenToControllers, this);
+    #else
     std::thread listeningThread(&ControllerHandler::ListenToControllers, this);
+    #endif
 
     while(true)
     {
@@ -98,7 +108,7 @@ void ControllerHandler::StartListening()
             }
         }
 
-        usleep(2000);
+        SLEEP(2000);
     }
 }
 
@@ -118,7 +128,7 @@ void ControllerHandler::ListenToControllers()
             }
         }
 
-        usleep(25);
+        SLEEP(25);
     }
 }
 

@@ -2,7 +2,14 @@
 
 #include <cstring>
 #include <cstdio>
+
+#ifdef _WIN32
+#include <Windows.h>
+#define SLEEP(x) Sleep(x)
+#else
 #include <unistd.h>
+#define SLEEP(x) usleep(x)
+#endif
 
 #include "AnswerReader.h"
 
@@ -35,7 +42,7 @@ static void PrintBatteryLevel(const BatteryLevel &level)
 
 Controller::Controller(hid_device* device)
 : m_ControllerPosition(0), m_Device(nullptr), m_IsInitialized(false),
-  m_Com(HidIO(device)), m_Interface(InterfaceManager(PRO_CONTROLLER_DEVICENAME))
+  m_Com(HidIO(device))
 {
     if(device) // Check if device exists
         m_Device = device;
@@ -64,7 +71,7 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
         command.BufferSize = 1; // still size of uint8_t
         m_Com.SendSubCommandToDevice(command, 0x1, 0x48);
         printf("Enabled Vibration\n");
-        usleep(50);
+        SLEEP(50);
     }
     else
     {
@@ -80,9 +87,9 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
         command.Buffer[0] = 0x01; // Set it to true
         command.BufferSize = 1;
         m_Com.SendSubCommandToDevice(command, 0x1, 0x40); // Enable it
-        usleep(50);
+        SLEEP(50);
         SetIMUSensitivity(3, 0, true, true); // Set Sensors to the defaults parameters
-        usleep(50);
+        SLEEP(50);
         printf("Enabled IMU\n");
     }
     else
@@ -99,7 +106,7 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
         command.Buffer[0] = 0x31; // Larger packet size
         command.BufferSize = 1;
         m_Com.SendSubCommandToDevice(command, 0x1, 0x3);
-        usleep(50);
+        SLEEP(50);
         printf("Initialized Bluetooth for NFC/IR\n");
     }
     else
@@ -316,8 +323,8 @@ void Controller::DoControllerRoutine()
         HIDBuffer reportBuffer = m_Com.ReadOnDevice();
         ButtonsReport report = reader.ReadAnswer(reportBuffer);
         
-        if(m_Interface.GetInterfaceStatus() == InterfaceStatus::INTERFACE_INIT_SUCCESS)
-            m_Interface.CreateEvent(report);
+        /*if(m_Interface.GetInterfaceStatus() == InterfaceStatus::INTERFACE_INIT_SUCCESS)
+            m_Interface.CreateEvent(report);*/
         
         #ifdef DEBUG
         if(isButtonsPressed(report))
@@ -396,7 +403,7 @@ bool JoyconController::DoHandshake(const uint8_t &controllerNumber)
         m_Com.SendSubCommandToDevice(command, 0x1, 0x48);
         m_JoyconLCom.SendSubCommandToDevice(command, 0x1, 0x48);
         printf("Enabled Vibration\n");
-        usleep(50);
+        SLEEP(50);
     }
     else
     {
@@ -413,9 +420,9 @@ bool JoyconController::DoHandshake(const uint8_t &controllerNumber)
         command.BufferSize = 1;
         m_Com.SendSubCommandToDevice(command, 0x1, 0x40); // Enable it on right joycon
         m_JoyconLCom.SendSubCommandToDevice(command, 0x1, 0x40); // Enable it on left joycon
-        usleep(50);
+        SLEEP(50);
         SetIMUSensitivity(3, 0, true, true); // Set Sensors to the defaults parameters
-        usleep(50);
+        SLEEP(50);
         printf("Enabled IMU\n");
     }
     else
@@ -433,7 +440,7 @@ bool JoyconController::DoHandshake(const uint8_t &controllerNumber)
         command.BufferSize = 1;
         m_Com.SendSubCommandToDevice(command, 0x1, 0x3);
         m_JoyconLCom.SendSubCommandToDevice(command, 0x1, 0x3);
-        usleep(50);
+        SLEEP(50);
         printf("Initialized Bluetooth for NFC/IR\n");
     }
     else
