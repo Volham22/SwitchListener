@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <cstring>
-#include <unistd.h>
 
 #ifdef DEBUG_VERBOSE
 static void printData(const HIDBuffer &data)
@@ -35,7 +34,7 @@ HidIO::HidIO(hid_device* device)
     else
         m_isConnected = false;
 
-    //hid_set_nonblocking(m_Device, 1);
+    //hid_set_nonblocking(m_Device, 0);
 }
 
 HIDBuffer HidIO::SetDisconnected()

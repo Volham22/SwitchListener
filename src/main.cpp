@@ -1,9 +1,17 @@
 #include <cstring>
 #include "ConnectionsManager.h"
 
+#ifdef _WIN32
+#define SL_PLATFORM "SwitchListener - Windows\n"
+#else
+#define SL_PLATFORM "SwitchListener - GNU Linux\n"
+#endif
+
 int main(int argc, char* argv[])
 {
-    int res = hid_init();
+    printf(SL_PLATFORM);
+
+    int res = hid_init(); 
 
     if(res)
     {

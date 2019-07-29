@@ -8,6 +8,8 @@
 #define SLEEP(x) usleep(x)
 #endif
 
+#include <cwchar>
+
 #define SCANNING_DELAY 2000 // in ms
 
 inline static bool isJoycon(ControllerType type)
@@ -66,7 +68,7 @@ void ControllerHandler::StartListening()
                     {
                         m_Connected--;
                         delete controller;
-                        printf("Warning: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
+                        printf("Error: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
                     }
                 }
                 else
@@ -84,7 +86,7 @@ void ControllerHandler::StartListening()
                     {
                         m_Connected--;
                         delete controller;
-                        printf("Warning: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
+                        printf("Error: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
                     }
                 }
             }
@@ -103,7 +105,7 @@ void ControllerHandler::StartListening()
                 {
                     delete controller;
                     m_Connected--;
-                    printf("Warning: Handshake failed for %s\n", TypeToString(m_scanner.GetControllerType()));
+                    printf("Error: Handshake failed for %s aborting listening ...\n", TypeToString(m_scanner.GetControllerType()));
                 }
             }
         }

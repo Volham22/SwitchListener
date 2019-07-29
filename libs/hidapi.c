@@ -219,16 +219,14 @@ static HANDLE open_device(const char *path, BOOL enumerate)
 {
 	HANDLE handle;
 	DWORD desired_access = (enumerate)? 0: (GENERIC_WRITE | GENERIC_READ);
-	DWORD share_mode = (enumerate)?
-	                      FILE_SHARE_READ|FILE_SHARE_WRITE:
-	                      FILE_SHARE_READ;
+	DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE;
 
 	handle = CreateFileA(path,
 		desired_access,
 		share_mode,
 		NULL,
 		OPEN_EXISTING,
-		FILE_FLAG_OVERLAPPED,/*FILE_ATTRIBUTE_NORMAL,*/
+		FILE_FLAG_OVERLAPPED, /*FILE_ATTRIBUTE_NORMAL,*/
 		0);
 
 	return handle;
@@ -846,9 +844,9 @@ int HID_API_EXPORT_CALL HID_API_CALL hid_get_indexed_string(hid_device *dev, int
 }
 
 
-HID_API_EXPORT const wchar_t * HID_API_CALL  hid_error(hid_device *dev)
+HID_API_EXPORT const wchar_t* HID_API_CALL  hid_error(hid_device *dev)
 {
-	return (wchar_t*)dev->last_error_str;
+	return (const wchar_t*)dev->last_error_str;
 }
 
 
