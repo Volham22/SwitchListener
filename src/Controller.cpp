@@ -112,6 +112,7 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
     if(m_Com.IsConnected())
     {
         SwitchPlayerLedOn(controllerNumber);
+        usleep(50);
         m_ControllerPosition = controllerNumber;
     }
     else
@@ -135,7 +136,8 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
                 break;
         } 
 
-        PrintBatteryLevel(level);      
+        PrintBatteryLevel(level);
+        usleep(50);  
     }
     else
     {
@@ -143,6 +145,18 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
         return false;
     }
 
+    // Enable Home led
+    if(m_Com.IsConnected())
+    {
+        SetHomeLed(true, 10);
+        usleep(50);
+    }
+    else
+    {
+        printf("=======End of Handshake=======\n");
+        return false;
+    }
+    
     printf("=======End of Handshake=======\n\n");
 
     if(!m_Com.IsConnected())
@@ -155,6 +169,8 @@ bool Controller::DoHandshake(const uint8_t &controllerNumber)
         m_IsInitialized = true;
         return true;
     }
+
+    m_Com.SetNonblocking(true);
 }
 
 bool Controller::SetVibration(bool active)
@@ -287,6 +303,75 @@ bool Controller::SwitchPlayerLedOn(const uint8_t &ledNumber)
     }
 }
 
+bool Controller::SetHomeLed(bool active, uint8_t intensity)
+{
+    /*
+     * Intensity value must be between 0 and 15 because the 4 high bits
+     * are used to control the intensity
+     */
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 25;
+
+        buffer.Buffer[0] = active ? 0x1 : 0x0;
+
+        if(intensity > 15)
+        {
+            printf("Warning: Intensity must be between 0 and 15 !\n");
+            return false;
+        }
+
+        buffer.Buffer[1] = (intensity << 4) | 0x0;
+
+        m_Com.SendSubCommandToDevice(buffer, 0x1, 0x38);
+        printf("Switch Home led %s\n", active ? "on" : "off");
+
+        return true;
+    }
+    else
+    {
+        printf("Device already disconnected\n");
+        return false;
+    }
+}
+
+bool Controller::SetHomeLedFade(bool active, uint8_t multiplier, uint8_t cycleDuration, uint8_t intensity)
+{
+    /*
+     * Intensity value must be between 0 and 15 because the 4 high bits
+     * are used to control the intensity
+     */
+
+    if (m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 25;
+
+        buffer.Buffer[0] = (active ? 0x1 : 0x0) << 4 | cycleDuration;
+
+        if (intensity > 15)
+        {
+            printf("Warning: Intensity must be between 0 and 15 !\n");
+            return false;
+        }
+
+        buffer.Buffer[1] = (intensity << 4) | 0x0; // Repead fade forever (low bits 0x0)
+        buffer.Buffer[3] = (multiplier << 4) | 0xF;
+        buffer.Buffer[4] = (multiplier << 4) | 0xF;
+
+        m_Com.SendSubCommandToDevice(buffer, 0x1, 0x38);
+        printf("Switch Home led %s\n", active ? "on" : "off");
+
+        return true;
+    }
+    else
+    {
+        printf("Device already disconnected\n");
+        return false;
+    }
+}
+
 bool Controller::Disconnect()
 {
     if(m_Com.IsConnected())
@@ -307,7 +392,7 @@ bool Controller::Disconnect()
     }
 }
 
-void Controller::DoControllerRoutine()
+bool Controller::DoControllerRoutine()
 {
     AnswerReader reader;
 
@@ -363,6 +448,16 @@ void Controller::DoControllerRoutine()
             printf("=================================\n");
         }
         #endif
+
+        return true;
+    }
+    else
+    {
+        #ifdef DEBUG
+        printf("Controller %d is disconnected !\n", m_ControllerPosition);
+        #endif
+
+        return false;
     }
 }
 
@@ -623,6 +718,75 @@ bool JoyconController::SwitchPlayerLedOn(const uint8_t &ledNumber)
     }
 }
 
+bool JoyconController::SetHomeLed(bool active, uint8_t intensity)
+{
+    /*
+     * Intensity value must be between 0 and 15 because the 4 high bits
+     * are used to control the intensity
+     */
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 25;
+
+        buffer.Buffer[0] = active ? 0x1 : 0x0;
+
+        if(intensity > 15)
+        {
+            printf("Warning: Intensity must be between 0 and 15 !\n");
+            return false;
+        }
+
+        buffer.Buffer[1] = (intensity << 4) | 0x0;
+
+        m_Com.SendSubCommandToDevice(buffer, 0x1, 0x38);
+        printf("Switch Home led %s\n", active ? "on" : "off");
+
+        return true;
+    }
+    else
+    {
+        printf("Device already disconnected\n");
+        return false;
+    }
+}
+
+bool JoyconController::SetHomeLedFade(bool active, uint8_t multiplier, uint8_t cycleDuration, uint8_t intensity)
+{
+    /*
+     * Intensity value must be between 0 and 15 because the 4 high bits
+     * are used to control the intensity
+     */
+
+    if(m_Com.IsConnected())
+    {
+        HIDBuffer buffer = initBuffer();
+        buffer.BufferSize = 25;
+
+        buffer.Buffer[0] = (active ? 0x1 : 0x0) << 4 | cycleDuration;
+
+        if(intensity > 15)
+        {
+            printf("Warning: Intensity must be between 0 and 15 !\n");
+            return false;
+        }
+
+        buffer.Buffer[1] = (intensity << 4) | 0x0; // Repead fade forever (low bits 0x0)
+        buffer.Buffer[3] = (multiplier << 4) | 0xF;
+        buffer.Buffer[4] = (multiplier << 4) | 0xF;
+
+        m_Com.SendSubCommandToDevice(buffer, 0x1, 0x38);
+        printf("Switch Home led %s\n", active ? "on" : "off");
+
+        return true;
+    }
+    else
+    {
+        printf("Device already disconnected\n");
+        return false;
+    }
+}
+
 bool JoyconController::Disconnect()
 {
     HIDBuffer buffer = initBuffer();
@@ -656,7 +820,7 @@ bool JoyconController::Disconnect()
     }
 }
 
-void JoyconController::DoControllerRoutine()
+bool JoyconController::DoControllerRoutine()
 {
     AnswerReader reader;
 
@@ -710,7 +874,15 @@ void JoyconController::DoControllerRoutine()
             printf("=================================\n");
         }
         #endif
+
+        return true;
     }
+    else
+    {
+        printf("A joycon is disconnected !\n");
+        return false;
+    }
+    
 }
 
 JoyconController::~JoyconController()

@@ -7,8 +7,7 @@
 #define INPUT_BUFFER_SIZE (0x400)
 typedef unsigned char uchar;
 
-struct HIDBuffer
-{
+struct HIDBuffer {
     int BufferSize;
     uchar Buffer[INPUT_BUFFER_SIZE];
 };
@@ -21,6 +20,7 @@ public:
     HidIO();
     HidIO(hid_device* device);
     void WriteOnDevice(const HIDBuffer &data);
+    void SetNonblocking(bool state) const;
     HIDBuffer SendCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID);
     HIDBuffer SendSubCommandToDevice(HIDBuffer commandBuffer, uint8_t commandID, uint8_t subCommandID);
     HIDBuffer ReadOnDevice();

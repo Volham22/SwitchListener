@@ -108,13 +108,15 @@ void ControllerHandler::ListenToControllers()
     {
         for(unsigned int iController = 0; iController < m_ConnectedControllers.size(); iController++)
         {
-            m_ConnectedControllers[iController]->DoControllerRoutine();
-
-            if(!m_ConnectedControllers[iController]->IsConnected())
+            if (!(m_ConnectedControllers[iController]->DoControllerRoutine()))
             {
                 delete m_ConnectedControllers[iController];
                 m_ConnectedControllers.erase(m_ConnectedControllers.begin() + iController);
                 m_Connected--;
+
+                #ifdef DEBUG
+                printf("Deleted device, %d device connected\n", (int)m_ConnectedControllers.size());
+                #endif
             }
         }
 
@@ -124,7 +126,7 @@ void ControllerHandler::ListenToControllers()
 
 ControllerHandler::~ControllerHandler()
 {
-    printf("Waiting running threads, controllers will be disconnected ...\n");
+    printf("Waiting running threads, controller will be disconnected ...\n");
 
     for(unsigned int iController = 0; iController < m_ConnectedControllers.size(); iController++)
     {

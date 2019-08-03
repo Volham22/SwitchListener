@@ -35,7 +35,7 @@ HidIO::HidIO(hid_device* device)
     else
         m_isConnected = false;
 
-    //hid_set_nonblocking(m_Device, 1);
+    //hid_set_nonblocking(m_Device, 0);
 }
 
 HIDBuffer HidIO::SetDisconnected()
@@ -53,6 +53,14 @@ void HidIO::WriteOnDevice(const HIDBuffer &data)
         if(result < 0) // Couldn't write on device, mark it as disconnected
             m_isConnected = false;
     }
+}
+
+void HidIO::SetNonblocking(bool active) const
+{
+    if(active)
+        hid_set_nonblocking(m_Device, 1);
+    else
+        hid_set_nonblocking(m_Device, 0);
 }
 
 HIDBuffer HidIO::ReadOnDevice()
