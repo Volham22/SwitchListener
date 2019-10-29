@@ -1,9 +1,11 @@
+#ifndef __WIN32 // Since interface creation isn't supported yet for windows
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
 #include <linux/input.h>
 #include <linux/uinput.h>
 #include <libudev.h>
+
 
 #include "AnswerReader.h"
 
@@ -39,4 +41,5 @@ private:
     int m_fd;
 };
 
+#endif
 #endif
