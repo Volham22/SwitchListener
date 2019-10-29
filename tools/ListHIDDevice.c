@@ -1,6 +1,10 @@
 #include <stdio.h>
 
+#ifdef _WIN32
+#include "../libs/hidapi.h"
+#else
 #include <hidapi/hidapi.h>
+#endif
 
 
 int main(void)

@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 #include "HidComm.h"
-#include "Interface.h"
+//#include "Interface.h"
 
 class SampleController
 {
@@ -42,7 +42,7 @@ private:
     hid_device* m_Device;
     bool m_IsInitialized;
     HidIO m_Com;
-    InterfaceManager m_Interface;
+    //InterfaceManager m_Interface;
     bool Disconnect();
 };
 

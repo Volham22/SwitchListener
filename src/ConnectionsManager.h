@@ -1,7 +1,13 @@
 #ifndef CONNECTIONSMANAGER_H
 #define CONNECTIONSMANAGER_H
 
+#ifdef _WIN32
+#define _WIN32_WINNT 0x0501 // To use mingw threads on Windows xp and higher
+#include "../libs/mingw.thread.h"
+#else
 #include <thread>
+#endif
+
 #include <vector>
 
 #include "HidScanner.h"

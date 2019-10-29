@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <cstring>
-#include <unistd.h>
 
 #ifdef DEBUG_VERBOSE
 static void printData(const HIDBuffer &data)

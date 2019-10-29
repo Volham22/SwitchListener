@@ -1,6 +1,14 @@
 #include "ConnectionsManager.h"
 
+#ifdef _WIN32
+#include <Windows.h>
+#define SLEEP(x) Sleep(x)
+#else
 #include <unistd.h>
+#define SLEEP(x) usleep(x)
+#endif
+
+#include <cwchar>
 
 #define SCANNING_DELAY 2000 // in ms
 
@@ -16,7 +24,11 @@ ControllerHandler::ControllerHandler(bool mergeJoycons)
 void ControllerHandler::StartListening()
 {
     /* Creating Listening Thread */
+    #ifdef _WIN32
+    mingw_stdthread::thread listeningThread(&ControllerHandler::ListenToControllers, this);
+    #else
     std::thread listeningThread(&ControllerHandler::ListenToControllers, this);
+    #endif
 
     while(true)
     {
@@ -56,7 +68,7 @@ void ControllerHandler::StartListening()
                     {
                         m_Connected--;
                         delete controller;
-                        printf("Warning: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
+                        printf("Error: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
                     }
                 }
                 else
@@ -74,7 +86,7 @@ void ControllerHandler::StartListening()
                     {
                         m_Connected--;
                         delete controller;
-                        printf("Warning: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
+                        printf("Error: Handshake failed for merged %s\n", TypeToString(m_scanner.GetControllerType()));
                     }
                 }
             }
@@ -93,12 +105,12 @@ void ControllerHandler::StartListening()
                 {
                     delete controller;
                     m_Connected--;
-                    printf("Warning: Handshake failed for %s\n", TypeToString(m_scanner.GetControllerType()));
+                    printf("Error: Handshake failed for %s aborting listening ...\n", TypeToString(m_scanner.GetControllerType()));
                 }
             }
         }
 
-        usleep(2000);
+        SLEEP(2000);
     }
 }
 
@@ -120,7 +132,7 @@ void ControllerHandler::ListenToControllers()
             }
         }
 
-        usleep(25);
+        SLEEP(25);
     }
 }
 

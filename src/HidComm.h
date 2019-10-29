@@ -1,7 +1,12 @@
 #ifndef HID_COMM_H
 #define HID_COMM_H
 
+#ifdef _WIN32
+#include "../libs/hidapi.h"
+#else
 #include <hidapi/hidapi.h>
+#endif
+
 #include <cstdint>
 
 #define INPUT_BUFFER_SIZE (0x400)

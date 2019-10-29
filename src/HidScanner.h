@@ -1,7 +1,12 @@
 #ifndef HID_SCANNER_H
 #define HID_SCANNER_H
 
+#ifdef _WIN32
+#include "../libs/hidapi.h"
+#else
 #include <hidapi/hidapi.h>
+#endif
+
 #include <vector>
 
 #define JOYCON_L_ID (0x2006)
