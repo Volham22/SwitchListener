@@ -403,6 +403,10 @@ bool Controller::DoControllerRoutine()
         
         if(m_Interface.GetInterfaceStatus() == InterfaceStatus::INTERFACE_INIT_SUCCESS)
             m_Interface.CreateEvent(report);
+        #ifdef DEBUG
+        else
+            printf("Error : Controller interface has not been initialized correctly\n Unable to register controller events\n");
+        #endif
         
         #ifdef DEBUG
         if(isButtonsPressed(report))
