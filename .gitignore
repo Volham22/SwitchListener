@@ -6,6 +6,8 @@ ListHIDDevice
 RulesChecker
 SwitchListener
 *.o
+*.a
+*.exe
 
 # CMakeFiles :
 tools/CMakeFiles/
