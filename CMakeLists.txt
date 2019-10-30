@@ -13,6 +13,7 @@ set(SRC
     src/HidComm.cpp
     src/HidScanner.cpp
     src/ConnectionsManager.cpp
+    src/ToolkitManager.cpp
     src/main.cpp)
 
 set(HEADERS
@@ -20,6 +21,7 @@ set(HEADERS
     src/Controller.h
     src/HidComm.h
     src/HidScanner.h
+    src/ToolkitManager.h
     src/ConnectionsManager.h)
 
 add_subdirectory(libs/)

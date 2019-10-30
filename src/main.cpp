@@ -1,5 +1,6 @@
 #include <cstring>
 #include "ConnectionsManager.h"
+#include "ToolkitManager.h"
 
 #ifdef _WIN32
 #define SL_PLATFORM "SwitchListener - Windows\n"
@@ -19,7 +20,7 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    bool mergingMode = false;
+    bool mergingMode = false, toolkitMode = false;
     
     /* Reading args temp */
     for(int i = 0; i<argc; i++)
@@ -32,9 +33,23 @@ int main(int argc, char* argv[])
             mergingMode = true;
             break;
         }
+        else if(!strcmp("tools", argv[i]))
+        {
+            toolkitMode = true;
+            break;
+        }
     }
-    ControllerHandler handler(mergingMode);
-    handler.StartListening();
+
+    if(!toolkitMode)
+    {
+        ControllerHandler handler(mergingMode);
+        handler.StartListening();
+    }
+    else
+    {
+        ToolkitManager manager;
+        manager.ListAvailableControllers();
+    }
 
     hid_exit();
     return EXIT_SUCCESS;

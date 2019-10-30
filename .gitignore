@@ -8,6 +8,7 @@ SwitchListener
 *.o
 *.a
 *.exe
+*.bin
 
 # CMakeFiles :
 tools/CMakeFiles/

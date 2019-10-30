@@ -95,10 +95,10 @@ HIDBuffer HidIO::ReadOnDevice()
 
 HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
 {
-    #ifdef DEBUG_VERBOSE
-    printf("Send:\n");
-    printData(buffer);
-    #endif
+    //#ifdef DEBUG_VERBOSE
+    //printf("Send:\n");
+    //printData(buffer);
+    //#endif
     
     hid_write(m_Device, buffer.Buffer, buffer.BufferSize);
 
@@ -106,10 +106,10 @@ HIDBuffer HidIO::ExchangeOnDevice(HIDBuffer buffer)
 
     if(res > 0)
     {
-        #ifdef DEBUG_VERBOSE
-        printf("Receive:\n");
-        printData(buffer);
-        #endif
+        //#ifdef DEBUG_VERBOSE
+        //printf("Receive:\n");
+        //printData(buffer);
+        //#endif
         return buffer; // Return data sent by the controller
     }
     else
